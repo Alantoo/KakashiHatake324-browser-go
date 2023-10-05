@@ -1,4 +1,4 @@
-package crigo_test
+package browsergo_test
 
 import (
 	"context"
@@ -11,13 +11,13 @@ import (
 	"testing"
 	"time"
 
-	crigo "github.com/kakashihatake324/browser-go"
+	browsergo "github.com/KakashiHatake324/browser-go"
 )
 
 const proxys = "http://aFsAq7B16-mushroom-b70bf8ba79!g-us!f-hddv!sid-gASmCJOgfOs:ad7k3jfj3kiuf3f@p2.mushroomproxy.com:8000"
 
 func TestWalmart(t *testing.T) {
-	service, err := crigo.InitCRI(true, "")
+	service, err := browsergo.InitCRI(true, "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,10 +31,10 @@ func TestWalmart(t *testing.T) {
 
 	defer instance.Close()
 
-	browserOpts := &crigo.BrowserOpts{
+	browserOpts := &browsergo.BrowserOpts{
 		StartUrl: "",
 		//Proxy:        proxys,
-		Args:         []crigo.FlagType{},
+		Args:         []browsergo.FlagType{},
 		Headless:     false,
 		OpenDevtools: false,
 		WaitLoad:     false,
@@ -53,7 +53,7 @@ func TestWalmart(t *testing.T) {
 
 	defer close()
 
-	go instance.StartListener(func(intercept *crigo.InterceptorCommunication) {
+	go instance.StartListener(func(intercept *browsergo.InterceptorCommunication) {
 		if intercept.Request.Url == "https://collector-pxu6b0qd2s.px-cloud.net/assets/js/bundle" {
 			//log.Println("IN THE LISTENER", intercept.Request)
 		}
