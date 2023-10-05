@@ -3,4 +3,5 @@ TestInfo.go
 nike_test.go
 hibbett_test.go
 target_test.go
+snipes_test.go
 *sessions_store*

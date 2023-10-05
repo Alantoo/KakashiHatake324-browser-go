@@ -1,6 +1,6 @@
 //go:build !windows
 
-package crigo
+package browsergo
 
 import _ "embed"
 

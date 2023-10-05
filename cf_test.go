@@ -1,4 +1,4 @@
-package crigo_test
+package browsergo_test
 
 import (
 	"context"
@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	crigo "github.com/graph-labs-io/cri-go"
+	browsergo "github.com/KakashiHatake324/browser-go"
 )
 
 func TestST(t *testing.T) {
-	service, err := crigo.InitCRI(true, "")
+	service, err := browsergo.InitCRI(true, "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,10 +25,10 @@ func TestST(t *testing.T) {
 
 	defer instance.Close()
 
-	browserOpts := &crigo.BrowserOpts{
+	browserOpts := &browsergo.BrowserOpts{
 		StartUrl:     "",
 		Proxy:        proxy,
-		Args:         []crigo.FlagType{},
+		Args:         []browsergo.FlagType{},
 		Headless:     false,
 		OpenDevtools: false,
 		WaitLoad:     false,

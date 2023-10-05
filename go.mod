@@ -1,4 +1,4 @@
-module github.com/graph-labs-io/cri-go
+module github.com/KakashiHatake324/browser-go
 
 go 1.19
 

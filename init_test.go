@@ -1,4 +1,4 @@
-package crigo_test
+package browsergo_test
 
 import (
 	"context"
@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	crigo "github.com/graph-labs-io/cri-go"
+	browsergo "github.com/KakashiHatake324/browser-go"
 )
 
 func TestInit(t *testing.T) {
 	t.Skip()
-	service, err := crigo.InitCRI(true, "")
+	service, err := browsergo.InitCRI(true, "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,10 +25,10 @@ func TestInit(t *testing.T) {
 
 	defer instance.Close()
 
-	browserOpts := &crigo.BrowserOpts{
+	browserOpts := &browsergo.BrowserOpts{
 		StartUrl:     "https://www.google.com",
 		Proxy:        "",
-		Args:         []crigo.FlagType{crigo.RandomWindowSize()},
+		Args:         []browsergo.FlagType{browsergo.RandomWindowSize()},
 		Headless:     false,
 		OpenDevtools: false,
 		WaitLoad:     false,
@@ -38,8 +38,8 @@ func TestInit(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	var cookies []*crigo.CRIGoCookies
-	cookies = append(cookies, &crigo.CRIGoCookies{
+	var cookies []*browsergo.CRIGoCookies
+	cookies = append(cookies, &browsergo.CRIGoCookies{
 		Name:   "hi",
 		Value:  "cookie",
 		Domain: ".nike.com",

@@ -1,4 +1,4 @@
-package crigo
+package browsergo
 
 import (
 	"encoding/base64"

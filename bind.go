@@ -1,4 +1,4 @@
-package crigo
+package browsergo
 
 import (
 	"bufio"
@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/graph-labs-io/cri-go/browser/exec"
+	"github.com/KakashiHatake324/browser-go/browser/exec"
 )
 
 // launch the server

@@ -6,15 +6,15 @@ Initiate the service worker when you start your program
 ```go
 package main
 
-import crigo "github.com/KakashiHatake324/browser-go"
+import browsergo "github.com/KakashiHatake324/browser-go"
 
 var (
-	CRIService *crigo.ClientInit
+	CRIService *browsergo.ClientInit
 )
 
 func init() {
     var err error
-	CRIService, err = crigo.InitCRI(false)
+	CRIService, err = browsergo.InitCRI(false)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,17 +36,17 @@ Use the service worker within your application to create browser instance and op
 	// cancel the instance context @can be used to stop tasks
 	defer instance.Cancel()
 	
-	crigo.CreateSession(sessionName, sessionsPath)
-	sessionFlag, _ := crigo.GetSessionFlag(sessionName, sessionsPath)
+	browsergo.CreateSession(sessionName, sessionsPath)
+	sessionFlag, _ := browsergo.GetSessionFlag(sessionName, sessionsPath)
 
-	browserOpts := &crigo.BrowserOpts{
+	browserOpts := &browsergo.BrowserOpts{
 		StartUrl: "",
 		Proxy:    proxy,
-		Args: []crigo.FlagType{
+		Args: []browsergo.FlagType{
 			sessionFlag,
-			crigo.RandomWindowSize(),
-			crigo.EnableFeatures([]string{"ReduceUserAgent", "NetworkService", "NetworkServiceInProcess"}),
-			crigo.EnableBlinkFeatures([]string{"IdleDetection"}),
+			browsergo.RandomWindowSize(),
+			browsergo.EnableFeatures([]string{"ReduceUserAgent", "NetworkService", "NetworkServiceInProcess"}),
+			browsergo.EnableBlinkFeatures([]string{"IdleDetection"}),
 		},
 		Headless:     false,
 		OpenDevtools: false,

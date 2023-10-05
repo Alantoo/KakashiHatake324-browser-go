@@ -1,4 +1,4 @@
-package crigo
+package browsergo
 
 func generateRandomMouseMovements() RandomizeType {
 	return RandomizeType(`var movement = document.querySelector('body');
