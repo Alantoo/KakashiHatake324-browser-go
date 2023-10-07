@@ -17,7 +17,7 @@ import (
 const proxys = "http://aFsAq7B16-mushroom-b70bf8ba79!g-us!f-hddv!sid-gASmCJOgfOs:ad7k3jfj3kiuf3f@p2.mushroomproxy.com:8000"
 
 func TestWalmart(t *testing.T) {
-	service, err := browsergo.InitCRI(true, "")
+	service, err := browsergo.InitBrowser(true, "")
 	if err != nil {
 		log.Fatal(err)
 	}

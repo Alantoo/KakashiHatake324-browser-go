@@ -18,8 +18,8 @@ type ClientInit struct {
 	sessions string
 }
 
-// cri service struct
-type CRIService struct {
+// browser service struct
+type BrowserService struct {
 	CTX                 context.Context
 	cancel              context.CancelFunc
 	conn                *websocket.Conn
@@ -58,14 +58,14 @@ type FlagType string
 type RandomizeType string
 
 // cookies struct to import cookies
-type CRIGoCookies struct {
+type BrowserGoCookies struct {
 	Name   string `json:"name"`
 	Value  string `json:"value"`
 	Domain string `json:"domain"`
 }
 
 // cookies returned by the api
-type CRICookiesApi struct {
+type BrowserCookiesApi struct {
 	Domain       string  `json:"domain"`
 	Expires      float64 `json:"expires"`
 	HTTPOnly     bool    `json:"httpOnly"`
@@ -85,12 +85,12 @@ type CRICookiesApi struct {
 // response from js evaluations
 type EvaluationResponse struct {
 	Value       string `json:"value"`
-	Description string `json:"description"`
+	Description string `json:"desbrowserption"`
 	Type        string `json:"type"`
 }
 
 // request format when making a fetch response
-type CRIGoFetchRequest struct {
+type BrowserGoFetchRequest struct {
 	Url            string                 `json:"url"`
 	Method         string                 `json:"method"`
 	Headers        map[string]interface{} `json:"headers"`
@@ -99,7 +99,7 @@ type CRIGoFetchRequest struct {
 }
 
 // response format when making a fetch request
-type CRIGoFetchResponse struct {
+type BrowserGoFetchResponse struct {
 	StatusCode int                    `json:"status"`
 	Headers    map[string]interface{} `json:"headers"`
 	Body       string                 `json:"body"`

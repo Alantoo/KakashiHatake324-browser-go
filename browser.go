@@ -8,7 +8,7 @@ import (
 )
 
 // open a new browser
-func (c *CRIService) OpenBrowser(opts *BrowserOpts) error {
+func (c *BrowserService) OpenBrowser(opts *BrowserOpts) error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -51,7 +51,7 @@ func (c *CRIService) OpenBrowser(opts *BrowserOpts) error {
 }
 
 // set new browser cookies
-func (c *CRIService) SetCookies(cookies []*CRIGoCookies) error {
+func (c *BrowserService) SetCookies(cookies []*BrowserGoCookies) error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -89,7 +89,7 @@ func (c *CRIService) SetCookies(cookies []*CRIGoCookies) error {
 }
 
 // navigate to a url and decide to wait or not
-func (c *CRIService) Navigate(url string, wait bool) error {
+func (c *BrowserService) Navigate(url string, wait bool) error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -128,7 +128,7 @@ func (c *CRIService) Navigate(url string, wait bool) error {
 }
 
 // wait for an element on the page
-func (c *CRIService) WaitForElement(element string) error {
+func (c *BrowserService) WaitForElement(element string) error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -166,7 +166,7 @@ func (c *CRIService) WaitForElement(element string) error {
 }
 
 // wait for the page to finish loading
-func (c *CRIService) WaitPageLoad() error {
+func (c *BrowserService) WaitPageLoad() error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -203,7 +203,7 @@ func (c *CRIService) WaitPageLoad() error {
 }
 
 // evaluate on the page
-func (c *CRIService) Evaluate(js string) (EvaluationResponse, error) {
+func (c *BrowserService) Evaluate(js string) (EvaluationResponse, error) {
 	// return error if connection is closed
 	if c.conn == nil {
 		return EvaluationResponse{}, errConnectionClosed
@@ -241,7 +241,7 @@ func (c *CRIService) Evaluate(js string) (EvaluationResponse, error) {
 }
 
 // click an element
-func (c *CRIService) Click(element string) error {
+func (c *BrowserService) Click(element string) error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -279,7 +279,7 @@ func (c *CRIService) Click(element string) error {
 }
 
 // input text like a human
-func (c *CRIService) InputText(inputName, text string) error {
+func (c *BrowserService) InputText(inputName, text string) error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -318,7 +318,7 @@ func (c *CRIService) InputText(inputName, text string) error {
 }
 
 // input text like a human
-func (c *CRIService) GetFrame(inputName string) (FrameType, error) {
+func (c *BrowserService) GetFrame(inputName string) (FrameType, error) {
 	// return error if connection is closed
 	if c.conn == nil {
 		return "", errConnectionClosed
@@ -357,7 +357,7 @@ func (c *CRIService) GetFrame(inputName string) (FrameType, error) {
 }
 
 // input text like a human
-func (c *CRIService) InputTextFrame(frame FrameType, inputName, text string) error {
+func (c *BrowserService) InputTextFrame(frame FrameType, inputName, text string) error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -397,7 +397,7 @@ func (c *CRIService) InputTextFrame(frame FrameType, inputName, text string) err
 }
 
 // get the current page cookies
-func (c *CRIService) GetCookies() ([]CRICookiesApi, error) {
+func (c *BrowserService) GetCookies() ([]BrowserCookiesApi, error) {
 	// return error if connection is closed
 	if c.conn == nil {
 		return nil, errConnectionClosed
@@ -434,7 +434,7 @@ func (c *CRIService) GetCookies() ([]CRICookiesApi, error) {
 }
 
 // open a new browser
-func (c *CRIService) RequestListener() (func(), error) {
+func (c *BrowserService) RequestListener() (func(), error) {
 	// return error if connection is closed
 	if c.conn == nil {
 		return nil, errConnectionClosed
@@ -473,7 +473,7 @@ func (c *CRIService) RequestListener() (func(), error) {
 }
 
 // top the listener
-func (c *CRIService) stopListening() {
+func (c *BrowserService) stopListening() {
 	// return error if connection is closed
 	if c.conn == nil {
 		return
@@ -498,10 +498,10 @@ func (c *CRIService) stopListening() {
 }
 
 // use fetch while on the page
-func (c *CRIService) Fetch(fetch *CRIGoFetchRequest) (CRIGoFetchResponse, error) {
+func (c *BrowserService) Fetch(fetch *BrowserGoFetchRequest) (BrowserGoFetchResponse, error) {
 	// return error if connection is closed
 	if c.conn == nil {
-		return CRIGoFetchResponse{}, errConnectionClosed
+		return BrowserGoFetchResponse{}, errConnectionClosed
 	}
 
 	var err error
@@ -512,7 +512,7 @@ func (c *CRIService) Fetch(fetch *CRIGoFetchRequest) (CRIGoFetchResponse, error)
 
 	jsonHeaders, err := json.Marshal(fetch.Headers)
 	if err != nil {
-		return CRIGoFetchResponse{}, err
+		return BrowserGoFetchResponse{}, err
 	}
 
 	// build the message going to the server
@@ -525,7 +525,7 @@ func (c *CRIService) Fetch(fetch *CRIGoFetchRequest) (CRIGoFetchResponse, error)
 		"body":           fetch.Body,
 		"immediateabort": fetch.ImmediateAbort,
 	}); err != nil {
-		return CRIGoFetchResponse{}, err
+		return BrowserGoFetchResponse{}, err
 	}
 	if c.client.verbose {
 		log.Println("[USING FETCH] Sending message")
@@ -533,7 +533,7 @@ func (c *CRIService) Fetch(fetch *CRIGoFetchRequest) (CRIGoFetchResponse, error)
 	c.browserSync.Lock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
-		return CRIGoFetchResponse{}, err
+		return BrowserGoFetchResponse{}, err
 	}
 	c.browserSync.Unlock()
 
@@ -544,7 +544,7 @@ func (c *CRIService) Fetch(fetch *CRIGoFetchRequest) (CRIGoFetchResponse, error)
 }
 
 // extra offers more control over the browser such as iframe
-func (c *CRIService) Extra() error {
+func (c *BrowserService) Extra() error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -581,7 +581,7 @@ func (c *CRIService) Extra() error {
 }
 
 // get the body of the current page
-func (c *CRIService) GetBody() (string, error) {
+func (c *BrowserService) GetBody() (string, error) {
 	// return error if connection is closed
 	if c.conn == nil {
 		return "", errConnectionClosed
@@ -592,7 +592,7 @@ func (c *CRIService) GetBody() (string, error) {
 }
 
 // input text like a human
-func (c *CRIService) SetBody(body string) error {
+func (c *BrowserService) SetBody(body string) error {
 	// return error if connection is closed
 	if c.conn == nil {
 		return errConnectionClosed
@@ -630,7 +630,7 @@ func (c *CRIService) SetBody(body string) error {
 }
 
 // randomize the mouse moving around the page to help against detection
-func (c *CRIService) RandomizeMouseMovements() error {
+func (c *BrowserService) RandomizeMouseMovements() error {
 
 	if err := c.WaitForElement("body"); err != nil {
 		return err
@@ -640,7 +640,7 @@ func (c *CRIService) RandomizeMouseMovements() error {
 }
 
 // randomize the page being scrolled to help again detection
-func (c *CRIService) RandomizeScrollMovements() error {
+func (c *BrowserService) RandomizeScrollMovements() error {
 
 	if err := c.WaitForElement("body"); err != nil {
 		return err
@@ -650,7 +650,7 @@ func (c *CRIService) RandomizeScrollMovements() error {
 }
 
 // reset the scroll position to the top of the page
-func (c *CRIService) ResetScrollMovement() error {
+func (c *BrowserService) ResetScrollMovement() error {
 
 	if err := c.WaitForElement("body"); err != nil {
 		return err

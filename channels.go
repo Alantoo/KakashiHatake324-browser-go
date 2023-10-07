@@ -9,19 +9,19 @@ var (
 	listenerSync sync.Mutex
 )
 
-func (b *CRIService) sendMessage(message map[string]interface{}) {
+func (b *BrowserService) sendMessage(message map[string]interface{}) {
 	messageSync.Lock()
 	defer messageSync.Unlock()
 	b.messages <- message
 }
 
-func (b *CRIService) sendListener(message map[string]interface{}) {
+func (b *BrowserService) sendListener(message map[string]interface{}) {
 	listenerSync.Lock()
 	defer listenerSync.Unlock()
 	b.requests <- message
 }
 
-func (b *CRIService) listenMessage() {
+func (b *BrowserService) listenMessage() {
 	defer close(b.done)
 	for {
 		ok := <-b.messages
@@ -31,7 +31,7 @@ func (b *CRIService) listenMessage() {
 	}
 }
 
-func (b *CRIService) listenRequests() {
+func (b *BrowserService) listenRequests() {
 	defer close(b.done)
 	for {
 		ok := <-b.requests
@@ -41,7 +41,7 @@ func (b *CRIService) listenRequests() {
 	}
 }
 
-func (b *CRIService) receiveMessage() <-chan map[string]interface{} {
+func (b *BrowserService) receiveMessage() <-chan map[string]interface{} {
 	messageSync.Lock()
 	defer messageSync.Unlock()
 	newListeners := make(chan map[string]interface{})
@@ -49,7 +49,7 @@ func (b *CRIService) receiveMessage() <-chan map[string]interface{} {
 	return newListeners
 }
 
-func (b *CRIService) receiveListener() <-chan map[string]interface{} {
+func (b *BrowserService) receiveListener() <-chan map[string]interface{} {
 	listenerSync.Lock()
 	defer listenerSync.Unlock()
 	newListeners := make(chan map[string]interface{})
@@ -57,7 +57,7 @@ func (b *CRIService) receiveListener() <-chan map[string]interface{} {
 	return newListeners
 }
 
-func (b *CRIService) removeMessageListener() error {
+func (b *BrowserService) removeMessageListener() error {
 	messageSync.Lock()
 	defer messageSync.Unlock()
 	for i, v := range b.messageReceivers {
@@ -68,7 +68,7 @@ func (b *CRIService) removeMessageListener() error {
 	return errCannotFindListner
 }
 
-func (b *CRIService) removeReceiveListener() error {
+func (b *BrowserService) removeReceiveListener() error {
 	listenerSync.Lock()
 	defer listenerSync.Unlock()
 	for i, v := range b.requestReceivers {
@@ -79,7 +79,7 @@ func (b *CRIService) removeReceiveListener() error {
 	return errCannotFindListner
 }
 
-func (b *CRIService) closeChannels() error {
+func (b *BrowserService) closeChannels() error {
 	select {
 	case b.messages <- map[string]interface{}{}:
 	case <-b.done:

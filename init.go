@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-// initiate a new instance of cri
-func InitCRI(verbose bool, path string) (*ClientInit, error) {
+// initiate a new instance of browser
+func InitBrowser(verbose bool, path string) (*ClientInit, error) {
 	// set up a background context
 	ctx := context.Background()
 	// set up a cancel for the context
@@ -22,29 +22,29 @@ func InitCRI(verbose bool, path string) (*ClientInit, error) {
 	}
 
 	if service.verbose {
-		log.Println("[INITCRI] Finding an open port to occupy")
+		log.Println("[INITBrowser] Finding an open port to occupy")
 	}
 	// initiate the port
 	service.findPort()
 	if service.verbose {
-		log.Println("[INITCRI] Launching driver server on port", service.port)
+		log.Println("[INITBrowser] Launching driver server on port", service.port)
 	}
 	// launch node server with the port
 	if err := service.launchServer(); err != nil {
 		if service.verbose {
-			log.Println("[INITCRI] Error Launching Server", err)
+			log.Println("[INITBrowser] Error Launching Server", err)
 		}
 		return nil, err
 	}
 	if service.verbose {
-		log.Println("[INITCRI] Launching client and connecting to server..")
+		log.Println("[INITBrowser] Launching client and connecting to server..")
 	}
 
 	// create the socket client
 	service.createMainClient()
 
 	if service.verbose {
-		log.Println("[INITCRI] Service created successfully")
+		log.Println("[INITBrowser] Service created successfully")
 	}
 	var err error
 	for i := 1; i < 5; i++ {

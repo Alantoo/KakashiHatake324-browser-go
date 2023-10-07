@@ -10,11 +10,11 @@ import (
 )
 
 // await for the next message
-func (c *CRIService) awaitMessage() (string, EvaluationResponse, []CRICookiesApi, error) {
+func (c *BrowserService) awaitMessage() (string, EvaluationResponse, []BrowserCookiesApi, error) {
 	var err error
 	var message string
 	var messageInterface EvaluationResponse
-	var cookiesInterface []CRICookiesApi
+	var cookiesInterface []BrowserCookiesApi
 	c.messageListener = c.receiveMessage()
 listen:
 	for {
@@ -48,10 +48,10 @@ listen:
 									messageInterface.Type = info["message"].(map[string]interface{})["type"].(string)
 								}
 							}
-							if info["message"].(map[string]interface{})["description"] != nil {
-								switch info["message"].(map[string]interface{})["description"].(type) {
+							if info["message"].(map[string]interface{})["desbrowserption"] != nil {
+								switch info["message"].(map[string]interface{})["desbrowserption"].(type) {
 								case string:
-									messageInterface.Description = info["message"].(map[string]interface{})["description"].(string)
+									messageInterface.Description = info["message"].(map[string]interface{})["desbrowserption"].(string)
 									if strings.Contains(messageInterface.Description, "SyntaxError") {
 										err = errors.New(messageInterface.Description)
 									}
@@ -82,16 +82,16 @@ listen:
 }
 
 // await for the fetch response
-func (c *CRIService) awaitFetchMessage() (CRIGoFetchResponse, error) {
+func (c *BrowserService) awaitFetchMessage() (BrowserGoFetchResponse, error) {
 	var err error
 	var message string
-	var response CRIGoFetchResponse
+	var response BrowserGoFetchResponse
 	c.messageListener = c.receiveMessage()
 listen:
 	for {
 		select {
 		case <-c.CTX.Done():
-			return CRIGoFetchResponse{}, errContextCancelled
+			return BrowserGoFetchResponse{}, errContextCancelled
 		default:
 			info, ok := <-c.messageListener
 			if ok {
@@ -119,11 +119,11 @@ listen:
 									response.Body = decodedString
 								}
 							}
-							if info["message"].(map[string]interface{})["description"] != nil {
-								switch info["message"].(map[string]interface{})["description"].(type) {
+							if info["message"].(map[string]interface{})["desbrowserption"] != nil {
+								switch info["message"].(map[string]interface{})["desbrowserption"].(type) {
 								case string:
-									if info["message"].(map[string]interface{})["description"].(string) != "" {
-										err = errors.New(info["message"].(map[string]interface{})["description"].(string))
+									if info["message"].(map[string]interface{})["desbrowserption"].(string) != "" {
+										err = errors.New(info["message"].(map[string]interface{})["desbrowserption"].(string))
 									}
 								}
 							}
@@ -146,7 +146,7 @@ listen:
 }
 
 // start the listener function
-func (c *CRIService) StartListener(handler func(*InterceptorCommunication)) {
+func (c *BrowserService) StartListener(handler func(*InterceptorCommunication)) {
 	c.requestListener = c.receiveListener()
 	for {
 		if !c.listeningToRequests {

@@ -21,7 +21,7 @@ func (s *ClientInit) createMainClient() {
 			s.conn, _, err = websocket.DefaultDialer.Dial(u.String(), nil)
 			if err != nil {
 				if s.verbose {
-					log.Println("[MAIN CRI-GO ERROR]", err)
+					log.Println("[MAIN browser-go ERROR]", err)
 				}
 			} else {
 				for {
@@ -54,14 +54,14 @@ func (s *ClientInit) createMainClient() {
 					}
 				}
 			}
-			log.Println("[MAIN CRI-GO DISCONNETED] RECONNECTING..")
+			log.Println("[MAIN browser-go DISCONNETED] RECONNECTING..")
 			time.Sleep(5 * time.Second)
 		}
 	}()
 }
 
 // create a websocket client for each task
-func (s *CRIService) createClient() {
+func (s *BrowserService) createClient() {
 	var err error
 	go func() {
 		for {
@@ -69,7 +69,7 @@ func (s *CRIService) createClient() {
 			s.conn, _, err = websocket.DefaultDialer.Dial(u.String(), nil)
 			if err != nil {
 				if s.client.verbose {
-					log.Println("[CRI-GO ERROR]", err)
+					log.Println("[browser-go ERROR]", err)
 				}
 			} else {
 				for {
@@ -108,7 +108,7 @@ func (s *CRIService) createClient() {
 					}
 				}
 			}
-			log.Println("[CRI-GO DISCONNETED] RECONNECTING..")
+			log.Println("[browser-go DISCONNETED] RECONNECTING..")
 			time.Sleep(5 * time.Second)
 		}
 	}()

@@ -9,12 +9,12 @@ package main
 import browsergo "github.com/KakashiHatake324/browser-go"
 
 var (
-	CRIService *browsergo.ClientInit
+	BrowserService *browsergo.ClientInit
 )
 
 func init() {
     var err error
-	CRIService, err = browsergo.InitCRI(false)
+	BrowserService, err = browsergo.InitBrowser(false)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,9 +63,9 @@ Setting cookies
 
 ```go
     // initiate the cookies struct
-	var cookies []*CRIGoCookies
+	var cookies []*BrowserGoCookies
     // append new cookies
-	cookies = append(cookies, &CRIGoCookies{
+	cookies = append(cookies, &BrowserGoCookies{
 		Name:   "hi",
 		Value:  "cookie",
 		Domain: ".google.com",
@@ -94,10 +94,10 @@ Waiting for an element
 	}
 ```
 
-Evaluate javascript and get the results
+Evaluate javasbrowserpt and get the results
 
 ```go
-    // evaluate js and use the returned information [value, description, type]
+    // evaluate js and use the returned information [value, desbrowserption, type]
 	username, err := instance.Evaluate("document.querySelector('[data-var=\"userName\"]')?.innerHTML")
 	if err != nil {
 		log.Fatal(err)
@@ -125,7 +125,7 @@ Using fetch api
 
 ```go
     // first create a struct with the request information
-	request := &CRIGoFetchRequest{
+	request := &BrowserGoFetchRequest{
 		Url:     fmt.Sprintf("https://api.nike.com/product_feed/threads/v2?filter=exclusiveAccess(true,false)&filter=language(en)&filter=marketplace(US)&filter=channelId(%s)&filter=productInfo.merchProduct.styleColor(%s)", nikeWebChannelId, productID),
 		Method:  "GET",
 		Headers: map[string]interface{}{"accept": "application/json"},

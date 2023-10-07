@@ -11,7 +11,7 @@ import (
 
 func TestInit(t *testing.T) {
 	t.Skip()
-	service, err := browsergo.InitCRI(true, "")
+	service, err := browsergo.InitBrowser(true, "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,8 +38,8 @@ func TestInit(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	var cookies []*browsergo.CRIGoCookies
-	cookies = append(cookies, &browsergo.CRIGoCookies{
+	var cookies []*browsergo.BrowserGoCookies
+	cookies = append(cookies, &browsergo.BrowserGoCookies{
 		Name:   "hi",
 		Value:  "cookie",
 		Domain: ".nike.com",

@@ -10,7 +10,7 @@ import (
 )
 
 // create a new service from the client
-func (c *ClientInit) NewService(ctx context.Context, timeout int64) (*CRIService, error) {
+func (c *ClientInit) NewService(ctx context.Context, timeout int64) (*BrowserService, error) {
 	// set up a background context
 	if ctx == nil {
 		ctx = context.Background()
@@ -18,7 +18,7 @@ func (c *ClientInit) NewService(ctx context.Context, timeout int64) (*CRIService
 	// set up a cancel for the context
 	ctx, cancel := context.WithCancel(ctx)
 	// set up the new service
-	service := &CRIService{
+	service := &BrowserService{
 		CTX:              ctx,
 		cancel:           cancel,
 		uuid:             uuid.NewV4().String(),
@@ -53,7 +53,7 @@ func (c *ClientInit) NewService(ctx context.Context, timeout int64) (*CRIService
 }
 
 // close the browser instance
-func (c *CRIService) Close() error {
+func (c *BrowserService) Close() error {
 	if c == nil {
 		return nil
 	}

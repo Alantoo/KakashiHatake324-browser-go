@@ -35,7 +35,7 @@ func (c *ClientInit) launchServer() error {
 		}
 	}()
 
-	exe, err := exec.New("CRI-Go", program)
+	exe, err := exec.New("browser-go", program)
 	if err != nil {
 		return err
 	}
