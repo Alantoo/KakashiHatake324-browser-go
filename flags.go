@@ -64,5 +64,9 @@ func StackTraceLimit(limit int) FlagType {
 }
 
 func StackTraceLimitV8(limit int) FlagType {
-	return FlagType(fmt.Sprintf("--js-flags='--stack-trace-limit %d'", limit))
+	return FlagType(fmt.Sprintf("--js-flags=\x27--stack-trace-limit %d\x27", limit))
+}
+
+func SetUserAgent(ua string) FlagType {
+	return FlagType(fmt.Sprintf("--user-agent=%s", ua))
 }
