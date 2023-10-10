@@ -48,7 +48,6 @@ func open(b []byte, name string) (*os.File, error) {
 }
 
 func clean(f *os.File) error {
-	log.Println(f.Name())
 	return os.Remove(f.Name())
 }
 

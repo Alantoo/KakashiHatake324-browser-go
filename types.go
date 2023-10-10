@@ -9,13 +9,15 @@ import (
 
 // client information
 type ClientInit struct {
-	CTX      context.Context
-	cancel   context.CancelFunc
-	verbose  bool
-	closeExe func() error
-	conn     *websocket.Conn
-	port     int
-	sessions string
+	CTX        context.Context
+	cancel     context.CancelFunc
+	verbose    bool
+	closeExe   func() error
+	conn       *websocket.Conn
+	port       int
+	sessions   string
+	Services   []*BrowserService
+	clientSync sync.Mutex
 }
 
 // browser service struct
@@ -35,7 +37,7 @@ type BrowserService struct {
 	listeningToRequests bool
 	runningBrowser      bool
 	timeout             int64
-	browserSync         sync.Mutex
+	browserSync         *sync.Mutex
 }
 
 // options for opening a new browser

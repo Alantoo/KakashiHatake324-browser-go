@@ -9,32 +9,15 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/KakashiHatake324/browser-go/browser/exec"
 )
 
 // launch the server
 func (c *ClientInit) launchServer() error {
-	var established bool
 	var err error
 	reader, writer := io.Pipe()
-
-	go func() {
-		scanner := bufio.NewScanner(reader)
-		for scanner.Scan() {
-			if c.verbose {
-				fmt.Println(scanner.Text())
-			}
-			if strings.Contains(scanner.Text(), "ERROR") {
-				err = errServerConnection
-				established = true
-			} else if strings.Contains(scanner.Text(), "server is running") {
-				established = true
-			}
-		}
-	}()
-
+	scanner := bufio.NewScanner(reader)
 	exe, err := exec.New("browser-go", program)
 	if err != nil {
 		return err
@@ -48,11 +31,16 @@ func (c *ClientInit) launchServer() error {
 	if c.verbose {
 		log.Println("[LAUNCH SERVER] server launched successfully")
 	}
-	for {
-		if established {
+	for scanner.Scan() {
+		if c.verbose {
+			fmt.Println(scanner.Text())
+		}
+		if strings.Contains(scanner.Text(), "ERROR") {
+			err = errServerConnection
+			break
+		} else if strings.Contains(scanner.Text(), "server is running") {
 			break
 		}
-		time.Sleep(100 * time.Millisecond)
 	}
 	return err
 }

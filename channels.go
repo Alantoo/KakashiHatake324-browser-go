@@ -24,9 +24,14 @@ func (b *BrowserService) sendListener(message map[string]interface{}) {
 func (b *BrowserService) listenMessage() {
 	defer close(b.done)
 	for {
-		ok := <-b.messages
-		for _, s := range b.messageReceivers {
-			s <- ok
+		select {
+		case <-b.CTX.Done():
+			return
+		default:
+			ok := <-b.messages
+			for _, s := range b.messageReceivers {
+				s <- ok
+			}
 		}
 	}
 }
@@ -34,9 +39,14 @@ func (b *BrowserService) listenMessage() {
 func (b *BrowserService) listenRequests() {
 	defer close(b.done)
 	for {
-		ok := <-b.requests
-		for _, s := range b.requestReceivers {
-			s <- ok
+		select {
+		case <-b.CTX.Done():
+			return
+		default:
+			ok := <-b.requests
+			for _, s := range b.requestReceivers {
+				s <- ok
+			}
 		}
 	}
 }
@@ -77,17 +87,4 @@ func (b *BrowserService) removeReceiveListener() error {
 		}
 	}
 	return errCannotFindListner
-}
-
-func (b *BrowserService) closeChannels() error {
-	select {
-	case b.messages <- map[string]interface{}{}:
-	case <-b.done:
-	}
-	select {
-	case b.requests <- map[string]interface{}{}:
-	case <-b.done:
-	}
-
-	return nil
 }

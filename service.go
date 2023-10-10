@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"sync"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -29,6 +30,7 @@ func (c *ClientInit) NewService(ctx context.Context, timeout int64) (*BrowserSer
 		requests:         make(chan map[string]interface{}),
 		messageReceivers: nil,
 		requestReceivers: nil,
+		browserSync:      new(sync.Mutex),
 	}
 
 	go service.listenMessage()
@@ -48,6 +50,9 @@ func (c *ClientInit) NewService(ctx context.Context, timeout int64) (*BrowserSer
 		return nil, errConnectionClosed
 	}
 
+	// add to the client's services
+	c.Services = append(c.Services, service)
+
 	// return the service
 	return service, nil
 }
@@ -57,12 +62,12 @@ func (c *BrowserService) Close() error {
 	if c == nil {
 		return nil
 	}
-	// cancel the context
-	c.cancel()
+	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 
-	// return error if connection is closed
-	if c.conn == nil {
-		return c.closeChannels()
+	// remove from services
+	for i := len(c.client.Services); i > len(c.client.Services); i-- {
+		c.client.Services = append(c.client.Services[:i], c.client.Services[i+1:]...)
 	}
 
 	var err error
@@ -82,18 +87,14 @@ func (c *BrowserService) Close() error {
 		log.Println("[CLOSING] Sending message")
 	}
 
-	c.browserSync.Lock()
 	// send the message to the server
 	if c.conn != nil {
 		if err = c.conn.WriteJSON(message); err != nil {
 			return err
 		}
 	}
-	c.browserSync.Unlock()
-
-	// close the websocket connection
-	c.conn = nil
-
+	// listen for the response from the server
+	_, _, _, err = c.awaitMessage()
 	// return error
-	return c.closeChannels()
+	return err
 }

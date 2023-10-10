@@ -77,16 +77,13 @@ func (s *BrowserService) createClient() {
 					case <-s.CTX.Done():
 						return
 					default:
-						if s.conn == nil {
-							return
-						}
 						_, message, err := s.conn.ReadMessage()
 						if err != nil {
 							if s.client.verbose {
 								if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 									log.Printf("error: %v", err)
 								}
-								log.Println("[SOCKET CLIENT]", err)
+								break
 							}
 							break
 						}
@@ -99,6 +96,18 @@ func (s *BrowserService) createClient() {
 								log.Println("[SOCKET CLIENT] New Message:", string(message))
 							}
 							s.sendMessage(socketMessage)
+						case "close":
+							if s.client.verbose {
+								log.Println("[SOCKET CLIENT] New Message:", string(message))
+							}
+							// close the websocket connection
+							if err = s.conn.Close(); err != nil {
+								log.Println("[SOCKET CLIENT] Close Error:", err)
+							}
+							// cancel the context
+							s.cancel()
+							s.sendMessage(map[string]interface{}{"closed": true})
+							return
 						case "listener":
 							if s.client.verbose {
 								log.Println("[SOCKET CLIENT] New Request Listener Message:")

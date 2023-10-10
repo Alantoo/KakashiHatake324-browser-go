@@ -61,7 +61,7 @@ func (c *SolveKasada) HandleKasada() error {
 		Args: []FlagType{
 			SetUserAgent(c.UserAgent),
 		},
-		Headless:     true,
+		Headless:     false,
 		OpenDevtools: false,
 		WaitLoad:     false,
 	}

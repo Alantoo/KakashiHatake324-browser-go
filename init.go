@@ -61,11 +61,23 @@ func InitBrowser(verbose bool, path string) (*ClientInit, error) {
 
 // close the client
 func (c *ClientInit) CloseClient() error {
+	if c == nil {
+		return nil
+	}
+
+	c.clientSync.Lock()
+	defer c.clientSync.Unlock()
+
 	var err error
 	var message []byte
 	if c.verbose {
-		log.Println("[CLOSING] Closing Main Client")
+		log.Println("[CLOSING] Closing Main Client, Services:", len(c.Services))
 	}
+
+	for i := len(c.Services); i > len(c.Services); i-- {
+		c.Services[i].Close()
+	}
+
 	if message, err = json.Marshal(map[string]interface{}{
 		"action": "kill",
 	}); err != nil {
