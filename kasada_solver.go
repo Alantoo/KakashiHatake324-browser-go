@@ -30,6 +30,8 @@ type SolveKasada struct {
 
 // solve shape with a shape request
 func (c *SolveKasada) HandleKasada() error {
+	var err error
+
 	if c.KpsdkST != 0 {
 		cd := NewCDGenerator(c.KpsdkST)
 		cd.baseCDGen()
@@ -40,6 +42,11 @@ func (c *SolveKasada) HandleKasada() error {
 	c.XKpsdkCd = ""
 	c.XKpsdkCt = ""
 
+	if strings.Contains(c.ProxyString, "http://") {
+		if c.ProxyString, err = DeFormatProxy(c.ProxyString); err != nil {
+			return err
+		}
+	}
 	ctx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Duration(c.Deadline)*time.Second))
 	defer cancel()
 

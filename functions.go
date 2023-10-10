@@ -3,6 +3,7 @@ package browsergo
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"math/rand"
 	"strings"
 )
@@ -34,4 +35,20 @@ func FormatProxy(proxyString string) (string, error) {
 		err = errors.New("error formatting proxies")
 	}
 	return proxy, err
+}
+
+func DeFormatProxy(proxyString string) (string, error) {
+	var proxy, proxyuser string
+	var err error
+	proxyString = strings.ReplaceAll(proxyString, "http://", "")
+	proxySplit := strings.Split(proxyString, "@")
+	if len(proxySplit) == 2 {
+		proxy = proxySplit[1]
+		proxyuser = proxySplit[0]
+		return fmt.Sprintf("%s:%s", proxy, proxyuser), err
+	} else if len(proxySplit) == 1 {
+		return proxyString, err
+	} else {
+		return "", errors.New("error parsing proxy")
+	}
 }
