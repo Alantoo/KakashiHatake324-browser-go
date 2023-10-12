@@ -70,12 +70,10 @@ func (c *SolveKasada) HandleKasada() error {
 		return err
 	}
 
-	close, err := instance.RequestListener()
+	_, err = instance.RequestListener()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defer close()
 
 	defer instance.Close()
 
