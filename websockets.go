@@ -21,9 +21,10 @@ func (s *ClientInit) createMainClient() {
 			s.conn, _, err = websocket.DefaultDialer.Dial(u.String(), nil)
 			if err != nil {
 				if s.verbose {
-					log.Println("[MAIN browser-go ERROR]", err)
+					log.Println("[MAIN CRI-GO ERROR]", err)
 				}
 			} else {
+				log.Println("[MAIN SOCKET CLIENT] CONNECTED")
 				for {
 					select {
 					case <-s.CTX.Done():
@@ -54,7 +55,7 @@ func (s *ClientInit) createMainClient() {
 					}
 				}
 			}
-			log.Println("[MAIN browser-go DISCONNETED] RECONNECTING..")
+			log.Println("[MAIN CRI-GO DISCONNETED] RECONNECTING..")
 			time.Sleep(5 * time.Second)
 		}
 	}()
@@ -62,6 +63,7 @@ func (s *ClientInit) createMainClient() {
 
 // create a websocket client for each task
 func (s *BrowserService) createClient() {
+	defer CatchUnhandledError("createClient()")
 	var err error
 	go func() {
 		for {
@@ -69,7 +71,7 @@ func (s *BrowserService) createClient() {
 			s.conn, _, err = websocket.DefaultDialer.Dial(u.String(), nil)
 			if err != nil {
 				if s.client.verbose {
-					log.Println("[browser-go ERROR]", err)
+					log.Println("[CRI-GO ERROR]", err)
 				}
 			} else {
 				for {
@@ -77,13 +79,16 @@ func (s *BrowserService) createClient() {
 					case <-s.CTX.Done():
 						return
 					default:
+						if s.conn == nil {
+							return
+						}
 						_, message, err := s.conn.ReadMessage()
 						if err != nil {
 							if s.client.verbose {
 								if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 									log.Printf("error: %v", err)
 								}
-								break
+								log.Println("[SOCKET CLIENT]", err)
 							}
 							break
 						}
@@ -117,26 +122,31 @@ func (s *BrowserService) createClient() {
 					}
 				}
 			}
-			log.Println("[browser-go DISCONNETED] RECONNECTING..")
+			log.Println("[CRI-GO DISCONNETED] RECONNECTING..")
 			time.Sleep(5 * time.Second)
 		}
 	}()
 }
 
 // find an open port
-func (s *ClientInit) findPort() {
-	l, close := createListener()
+func (s *ClientInit) findPort() error {
+	l, close, err := createListener()
+	if err != nil {
+		return err
+	}
 	s.port = l.Addr().(*net.TCPAddr).Port
 	close()
+	return nil
 }
 
 // create a listener to find an open port
-func createListener() (l net.Listener, close func()) {
+func createListener() (l net.Listener, close func(), newerr error) {
 	l, err := net.Listen("tcp", ":0")
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return nil, nil, err
 	}
 	return l, func() {
 		_ = l.Close()
-	}
+	}, nil
 }
