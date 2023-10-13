@@ -23,8 +23,10 @@ func (s *ClientInit) createMainClient() {
 				if s.verbose {
 					log.Println("[MAIN CRI-GO ERROR]", err)
 				}
+				break
 			} else {
 				log.Println("[MAIN SOCKET CLIENT] CONNECTED")
+			main:
 				for {
 					select {
 					case <-s.CTX.Done():
@@ -41,7 +43,7 @@ func (s *ClientInit) createMainClient() {
 								}
 								log.Println("[MAIN SOCKET CLIENT]", err)
 							}
-							break
+							break main
 						}
 						socketMessage := make(map[string]interface{})
 						json.Unmarshal(message, &socketMessage)
@@ -73,7 +75,9 @@ func (s *BrowserService) createClient() {
 				if s.client.verbose {
 					log.Println("[CRI-GO ERROR]", err)
 				}
+				break
 			} else {
+			service:
 				for {
 					select {
 					case <-s.CTX.Done():
@@ -90,7 +94,7 @@ func (s *BrowserService) createClient() {
 								}
 								log.Println("[SOCKET CLIENT]", err)
 							}
-							break
+							break service
 						}
 						socketMessage := make(map[string]interface{})
 						json.Unmarshal(message, &socketMessage)
