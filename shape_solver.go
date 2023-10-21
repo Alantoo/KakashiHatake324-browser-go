@@ -213,8 +213,12 @@ func (c *SolveShape) makeScriptRequest() (string, error) {
 type ShapeSite string
 
 var (
-	Nordstrom  = ShapeSite("https://www.nordstrom.com/mwp/integration/ns_common.js?async")
-	NewBalance = ShapeSite(fmt.Sprintf("https://www.newbalance.com/on/demandware.static/Sites-NBUS-Site/-/en_US/v%d/js/nb-common.js?single", time.Now().UnixMicro()))
+	Starbucks   = ShapeSite("https://www.starbucks.com/vendor/static/vendor2.js")
+	Lululemon   = ShapeSite("https://shop.lululemon.com/shared/chunk.273c0224d38f1ad8.js?async")
+	EndClothing = ShapeSite("https://www.endclothing.com/_next/static/chunks/5qraApyWADJLRYOmkx14.js?async")
+	Target      = ShapeSite("https://assets.targetimg1.com/ssx/ssx.mod.js?async")
+	Nordstrom   = ShapeSite("https://www.nordstrom.com/mwp/integration/ns_common.js?async")
+	NewBalance  = ShapeSite(fmt.Sprintf("https://www.newbalance.com/on/demandware.static/Sites-NBUS-Site/-/en_US/v%d/js/nb-common.js?single", time.Now().UnixMicro()))
 )
 
 var shapeBody = fmt.Sprintf(`<html><head><title>Shape</title></head><body>%s</body></html>`, uuid.NewV4().String())
