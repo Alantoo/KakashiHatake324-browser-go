@@ -22,7 +22,7 @@ type SolveShape struct {
 	Context       context.Context
 	Cancel        func()
 	Deadline      int
-	ScriptUrl     string
+	ScriptUrl     ShapeSite
 	UserAgent     string
 	RequestUrl    string
 	RequestMethod string
@@ -161,7 +161,7 @@ func (c *SolveShape) makeScriptRequest() (string, error) {
 		Timeout:   6 * time.Second,
 	}
 
-	req, err := http.NewRequestWithContext(c.Context, "GET", c.ScriptUrl, nil)
+	req, err := http.NewRequestWithContext(c.Context, "GET", string(c.ScriptUrl), nil)
 	if err != nil {
 		return "", errors.New("error solving shape: http.NewRequestWithContext()")
 	}
@@ -209,5 +209,12 @@ func (c *SolveShape) makeScriptRequest() (string, error) {
 		return bodyString, nil
 	}
 }
+
+type ShapeSite string
+
+var (
+	Nordstrom  = ShapeSite("https://www.nordstrom.com/mwp/integration/ns_common.js?async")
+	NewBalance = ShapeSite(fmt.Sprintf("https://www.newbalance.com/on/demandware.static/Sites-NBUS-Site/-/en_US/v%d/js/nb-common.js?single", time.Now().UnixMicro()))
+)
 
 var shapeBody = fmt.Sprintf(`<html><head><title>Shape</title></head><body>%s</body></html>`, uuid.NewV4().String())
