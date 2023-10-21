@@ -20,6 +20,7 @@ type SolveShape struct {
 	*BrowserService
 	// seconds to stop the deadline
 	Context       context.Context
+	Cancel        func()
 	Deadline      int
 	ScriptUrl     string
 	UserAgent     string
@@ -30,114 +31,114 @@ type SolveShape struct {
 
 // solve shape with a shape request
 func (c *SolveShape) HandleShape() (map[string][]string, error) {
-
-	ctx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(time.Duration(c.Deadline)*time.Second))
-	defer cancel()
-
+	c.Context, c.Cancel = context.WithDeadline(context.TODO(), time.Now().Add(time.Duration(c.Deadline)*time.Second))
+	defer c.Cancel()
 	headers := make(map[string][]string)
 	var err error
-	var complete bool
-	domainUrl, err := url.Parse(c.RequestUrl)
-	if err != nil {
-		return nil, err
-	}
+	select {
+	case <-c.Context.Done():
+		err = errors.New("deadline has exceeded so the context cancelled")
+		return headers, err
+	case <-c.CTX.Done():
+		err = errors.New("main context was cancelled")
+		return headers, err
+	default:
+		var complete bool
+		domainUrl, err := url.Parse(c.RequestUrl)
+		if err != nil {
+			return headers, err
+		}
 
-	if err := c.Navigate(fmt.Sprintf("https://%s", domainUrl.Host), false); err != nil {
-		return nil, err
-	}
+		if !c.shapeLoaded {
+			if err := c.Navigate(fmt.Sprintf("https://%s", domainUrl.Host), false); err != nil {
+				return headers, err
+			}
 
-	if err := c.SetBody(shapeBody); err != nil {
-		return nil, err
-	}
+			time.Sleep(1 * time.Second)
 
-	close, err := c.RequestListener()
-	if err != nil {
-		return nil, err
-	}
+			if err := c.SetBody(shapeBody); err != nil {
+				return headers, err
+			}
 
-	defer close()
+			script, err := c.makeScriptRequest()
+			if err != nil {
+				return headers, err
+			}
 
-	go c.StartListener(
-		func(intercept *InterceptorCommunication) {
-			select {
-			case <-c.Context.Done():
-				err = errors.New("main context was cancelled")
-				return
-			case <-c.CTX.Done():
-				err = errors.New("main context was cancelled")
-				return
-			case <-ctx.Done():
-				err = errors.New("deadline has exceeded so the context cancelled")
-				return
-			default:
-				if intercept.Request.Url == c.RequestUrl && intercept.Request.Method == c.RequestMethod {
-					for k, v := range intercept.Request.Headers {
-						if strings.HasSuffix(strings.ToLower(k), "-a") ||
-							strings.HasSuffix(strings.ToLower(k), "-b") ||
-							strings.HasSuffix(strings.ToLower(k), "-c") ||
-							strings.HasSuffix(strings.ToLower(k), "-d") ||
-							strings.HasSuffix(strings.ToLower(k), "-e") ||
-							strings.HasSuffix(strings.ToLower(k), "-f") ||
-							strings.HasSuffix(strings.ToLower(k), "-z") ||
-							strings.HasSuffix(strings.ToLower(k), "-a0") ||
-							strings.HasSuffix(strings.ToLower(k), "-z0") {
-							headers[strings.ToLower(k)] = []string{v.(string)}
+			script = strings.ReplaceAll(script, "u=\"/", fmt.Sprintf("u=\"https://%s/", domainUrl.Host))
+			fullScript := fmt.Sprintf("(async() => { %s })()", script)
+			if _, err = c.Evaluate(fullScript); err != nil {
+				return headers, err
+			}
+
+			c.shapeLoaded = true
+		}
+		close, err := c.RequestListener()
+		if err != nil {
+			return headers, err
+		}
+		defer close()
+
+		go c.StartListener(
+			func(intercept *InterceptorCommunication) {
+				select {
+				case <-c.Context.Done():
+					err = errors.New("deadline has exceeded so the context cancelled")
+					return
+				case <-c.CTX.Done():
+					err = errors.New("main context was cancelled")
+					return
+				default:
+					if intercept.Request.Url == c.RequestUrl && intercept.Request.Method == c.RequestMethod {
+						for k, v := range intercept.Request.Headers {
+							if strings.HasSuffix(strings.ToLower(k), "-a") ||
+								strings.HasSuffix(strings.ToLower(k), "-b") ||
+								strings.HasSuffix(strings.ToLower(k), "-c") ||
+								strings.HasSuffix(strings.ToLower(k), "-d") ||
+								strings.HasSuffix(strings.ToLower(k), "-e") ||
+								strings.HasSuffix(strings.ToLower(k), "-f") ||
+								strings.HasSuffix(strings.ToLower(k), "-z") ||
+								strings.HasSuffix(strings.ToLower(k), "-a0") ||
+								strings.HasSuffix(strings.ToLower(k), "-z0") {
+								headers[strings.ToLower(k)] = []string{v.(string)}
+							}
+						}
+						if len(headers) != 0 {
+							complete = true
+							return
 						}
 					}
-					if len(headers) != 0 {
-						complete = true
-						return
-					}
 				}
-			}
-		},
-	)
+			},
+		)
 
-	script, err := c.makeScriptRequest()
-	if err != nil {
-		return nil, err
-	}
-	script = strings.ReplaceAll(script, "u=\"/", fmt.Sprintf("u=\"https://%s/", domainUrl.Host))
-	fullScript := fmt.Sprintf("(async() => { %s })()", script)
-	if _, err = c.Evaluate(fullScript); err != nil {
-		return nil, err
-	}
-	time.Sleep(2 * time.Second)
-	request := &BrowserGoFetchRequest{
-		Url:            c.RequestUrl,
-		Method:         c.RequestMethod,
-		Headers:        map[string]interface{}{},
-		Body:           "",
-		ImmediateAbort: true,
-	}
-	_, err = c.Fetch(request)
-	if err != nil {
-		return nil, err
-	}
+		time.Sleep(3 * time.Second)
 
-	for !complete && err == nil {
-		select {
-		case <-c.Context.Done():
-			err = errors.New("main context was cancelled")
+		request := &BrowserGoFetchRequest{
+			Url:            c.RequestUrl,
+			Method:         c.RequestMethod,
+			Headers:        map[string]interface{}{},
+			Body:           "",
+			ImmediateAbort: true,
+		}
+		_, err = c.Fetch(request)
+		if err != nil {
 			return headers, err
-		case <-c.CTX.Done():
-			err = errors.New("main context was cancelled")
-			return headers, err
-		case <-ctx.Done():
-			err = errors.New("deadline has exceeded so the context cancelled")
-			return headers, err
-		default:
-			body, errs := c.GetBody()
-			if errs != nil {
-				err = errs
+		}
+
+		for !complete && err == nil {
+			select {
+			case <-c.Context.Done():
+				err = errors.New("deadline has exceeded so the context cancelled")
+				return headers, err
+			case <-c.CTX.Done():
+				err = errors.New("main context was cancelled")
+				return headers, err
+			default:
+				time.Sleep(100 * time.Millisecond)
 			}
-			if strings.Contains(body, "The Chromium Authors") {
-				err = errors.New("blocked")
-			}
-			time.Sleep(100 * time.Millisecond)
 		}
 	}
-
 	return headers, err
 }
 
@@ -157,9 +158,10 @@ func (c *SolveShape) makeScriptRequest() (string, error) {
 
 	client := &http.Client{
 		Transport: transport,
+		Timeout:   6 * time.Second,
 	}
 
-	req, err := http.NewRequestWithContext(c.CTX, "GET", c.ScriptUrl, nil)
+	req, err := http.NewRequestWithContext(c.Context, "GET", c.ScriptUrl, nil)
 	if err != nil {
 		return "", errors.New("error solving shape: http.NewRequestWithContext()")
 	}
@@ -178,6 +180,9 @@ func (c *SolveShape) makeScriptRequest() (string, error) {
 	if err != nil {
 		return "", errors.New("error solving shape: client.Do(req)")
 	} else {
+		if resp.StatusCode != 200 {
+			return "", errors.New("error solving shape: proxy banned")
+		}
 		bodyText, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return "", errors.New("error solving shape: io.ReadAll(resp.Body)")

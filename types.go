@@ -37,6 +37,7 @@ type BrowserService struct {
 	listeningToRequests bool
 	runningBrowser      bool
 	timeout             int64
+	shapeLoaded         bool
 	browserSync         *sync.Mutex
 }
 

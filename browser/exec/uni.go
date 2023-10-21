@@ -79,7 +79,7 @@ func checkAndKillProcess(processName string) {
 			p.Kill()
 			continue
 		}
-		if name == processName {
+		if strings.EqualFold(name, processName) {
 			p.Kill()
 		}
 	}

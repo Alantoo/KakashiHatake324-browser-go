@@ -37,11 +37,11 @@ func (c *BrowserService) OpenBrowser(opts *BrowserOpts) error {
 		log.Println("[OPENING BROWSER] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -75,11 +75,11 @@ func (c *BrowserService) SetCookies(cookies []*BrowserGoCookies) error {
 		log.Println("[SETTING COOKIES] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -114,11 +114,11 @@ func (c *BrowserService) Navigate(url string, wait bool) error {
 		log.Println("[NAVIGATING] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -152,11 +152,11 @@ func (c *BrowserService) WaitForElement(element string) error {
 		log.Println("[WFE] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -189,11 +189,11 @@ func (c *BrowserService) WaitPageLoad() error {
 		log.Println("[WPL] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -227,11 +227,11 @@ func (c *BrowserService) Evaluate(js string) (EvaluationResponse, error) {
 		log.Println("[EVALUATING] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return EvaluationResponse{}, err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, response, _, err := c.awaitMessage()
@@ -265,11 +265,11 @@ func (c *BrowserService) Click(element string) error {
 		log.Println("[CLICK] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -304,11 +304,11 @@ func (c *BrowserService) InputText(inputName, text string) error {
 		log.Println("[INPUTTING TEXT] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -343,11 +343,11 @@ func (c *BrowserService) GetFrame(inputName string) (FrameType, error) {
 		log.Println("[GETTING FRAME] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return "", err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	new_frame, _, _, err := c.awaitMessage()
@@ -383,11 +383,11 @@ func (c *BrowserService) InputTextFrame(frame FrameType, inputName, text string)
 		log.Println("[INPUTTING TEXT IN FRAME] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -420,11 +420,11 @@ func (c *BrowserService) GetCookies() ([]BrowserCookiesApi, error) {
 		log.Println("[GET COOKIES] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return nil, err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, response, err := c.awaitMessage()
@@ -457,11 +457,11 @@ func (c *BrowserService) RequestListener() (func(), error) {
 		log.Println("[REQUEST LISTENER] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return nil, err
 	}
-	c.browserSync.Unlock()
 	// set the listener to on
 	c.listeningToRequests = true
 	// return error
@@ -492,9 +492,9 @@ func (c *BrowserService) stopListening() {
 		log.Println("[REMOVING LISTENER] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	c.conn.WriteJSON(message)
-	c.browserSync.Unlock()
 }
 
 // use fetch while on the page
@@ -531,16 +531,19 @@ func (c *BrowserService) Fetch(fetch *BrowserGoFetchRequest) (BrowserGoFetchResp
 		log.Println("[USING FETCH] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return BrowserGoFetchResponse{}, err
 	}
-	c.browserSync.Unlock()
 
-	// listen for the response from the server
-	response, err := c.awaitFetchMessage()
+	if !fetch.ImmediateAbort {
+		// listen for the response from the server
+		response, err := c.awaitFetchMessage()
+		return response, err
+	}
 	// return error
-	return response, err
+	return BrowserGoFetchResponse{}, err
 }
 
 // extra offers more control over the browser such as iframe
@@ -567,11 +570,11 @@ func (c *BrowserService) Extra() error {
 		log.Println("[USING EXTRA] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
@@ -616,11 +619,11 @@ func (c *BrowserService) SetBody(body string) error {
 		log.Println("[SETTING BODY] Sending message")
 	}
 	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
 	// send the message to the server
 	if err = c.conn.WriteJSON(message); err != nil {
 		return err
 	}
-	c.browserSync.Unlock()
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
