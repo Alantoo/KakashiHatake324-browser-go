@@ -10,8 +10,10 @@ import (
 	browsergo "github.com/KakashiHatake324/browser-go"
 )
 
+const shapeProxy = ""
+
 func TestShape(t *testing.T) {
-	service, err := browsergo.InitBrowser(true, "")
+	service, err := browsergo.InitBrowser(false, "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,7 +26,7 @@ func TestShape(t *testing.T) {
 
 	browserOpts := &browsergo.BrowserOpts{
 		StartUrl:     "",
-		Proxy:        "207.170.85.114:8263:4SR32:UKXTAR3V",
+		Proxy:        shapeProxy,
 		Args:         []browsergo.FlagType{},
 		Headless:     true,
 		OpenDevtools: false,
@@ -34,11 +36,11 @@ func TestShape(t *testing.T) {
 	if err := instance.OpenBrowser(browserOpts); err != nil {
 		log.Fatal(err)
 	}
-	proxy, _ := browsergo.FormatProxy("207.170.85.114:8263:4SR32:UKXTAR3V")
+	proxy, _ := browsergo.FormatProxy(shapeProxy)
 	shapeSolver := &browsergo.SolveShape{
 		BrowserService: instance,
 		Context:        context.TODO(),
-		Deadline:       10,
+		Deadline:       15,
 		ScriptUrl:      fmt.Sprintf("https://www.newbalance.com/on/demandware.static/Sites-NBUS-Site/-/en_US/v%d/js/nb-common.js?single", time.Now().UnixMicro()),
 		UserAgent:      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36",
 		RequestUrl:     "https://www.newbalance.com/on/demandware.static/Sites-NBUS-Site/en_US/Cart-AddProduct",
