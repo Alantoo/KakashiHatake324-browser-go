@@ -50,11 +50,11 @@ func (c *SolveShape) HandleShape() (map[string][]string, error) {
 		}
 
 		if !c.shapeLoaded {
-			if err := c.Navigate(fmt.Sprintf("https://%s", domainUrl.Host), false); err != nil {
+			if err := c.Navigate(c.ScriptUrl.host, false); err != nil {
 				return headers, err
 			}
 
-			time.Sleep(1 * time.Second)
+			time.Sleep(500 * time.Millisecond)
 
 			if err := c.SetBody(shapeBody); err != nil {
 				return headers, err
@@ -72,6 +72,7 @@ func (c *SolveShape) HandleShape() (map[string][]string, error) {
 			}
 
 			c.shapeLoaded = true
+			time.Sleep(2500 * time.Millisecond)
 		}
 		close, err := c.RequestListener()
 		if err != nil {
@@ -112,7 +113,7 @@ func (c *SolveShape) HandleShape() (map[string][]string, error) {
 			},
 		)
 
-		time.Sleep(3 * time.Second)
+		time.Sleep(1 * time.Second)
 
 		request := &BrowserGoFetchRequest{
 			Url:            c.RequestUrl,
@@ -161,7 +162,7 @@ func (c *SolveShape) makeScriptRequest() (string, error) {
 		Timeout:   6 * time.Second,
 	}
 
-	req, err := http.NewRequestWithContext(c.Context, "GET", string(c.ScriptUrl), nil)
+	req, err := http.NewRequestWithContext(c.Context, "GET", c.ScriptUrl.script, nil)
 	if err != nil {
 		return "", errors.New("error solving shape: http.NewRequestWithContext()")
 	}
@@ -210,15 +211,32 @@ func (c *SolveShape) makeScriptRequest() (string, error) {
 	}
 }
 
-type ShapeSite string
+type ShapeSite struct {
+	script string
+	host   string
+}
 
 var (
-	Starbucks   = ShapeSite("https://www.starbucks.com/vendor/static/vendor2.js")
-	Lululemon   = ShapeSite("https://shop.lululemon.com/shared/chunk.273c0224d38f1ad8.js?async")
-	EndClothing = ShapeSite("https://www.endclothing.com/_next/static/chunks/5qraApyWADJLRYOmkx14.js?async")
-	Target      = ShapeSite("https://assets.targetimg1.com/ssx/ssx.mod.js?async")
-	Nordstrom   = ShapeSite("https://www.nordstrom.com/mwp/integration/ns_common.js?async")
-	NewBalance  = ShapeSite(fmt.Sprintf("https://www.newbalance.com/on/demandware.static/Sites-NBUS-Site/-/en_US/v%d/js/nb-common.js?single", time.Now().UnixMicro()))
+	Starbucks = ShapeSite{
+		script: "https://www.starbucks.com/vendor/static/vendor2.js",
+		host:   "https://www.starbucks.com",
+	}
+	Lululemon = ShapeSite{
+		script: "https://shop.lululemon.com/shared/chunk.273c0224d38f1ad8.js?async",
+		host:   "https://shop.lululemon.com",
+	}
+	Target = ShapeSite{
+		script: "https://assets.targetimg1.com/ssx/ssx.mod.js?async",
+		host:   "https://www.target.com",
+	}
+	Nordstrom = ShapeSite{
+		script: "https://www.nordstrom.com/mwp/integration/ns_common.js?async",
+		host:   "https://www.nordstrom.com",
+	}
+	NewBalance = ShapeSite{
+		script: fmt.Sprintf("https://www.newbalance.com/on/demandware.static/Sites-NBUS-Site/-/en_US/v%d/js/nb-common.js?single", time.Now().UnixMicro()),
+		host:   "https://www.newbalance.com",
+	}
 )
 
 var shapeBody = fmt.Sprintf(`<html><head><title>Shape</title></head><body>%s</body></html>`, uuid.NewV4().String())
