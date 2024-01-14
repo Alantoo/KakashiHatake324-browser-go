@@ -8,7 +8,7 @@ import (
 	browsergo "github.com/KakashiHatake324/browser-go"
 )
 
-const shapeProxy = "207.170.88.148:6512:4SR32:UKXTAR3V"
+const shapeProxy = "p6.mushroomproxy.com:8000:1F7Aq7B16-mushroom-b70bf8ba79!g-us!f-hddv!sid-yLVblzPnMzY:1d7k3jfj3kiuf3f"
 
 func TestShape(t *testing.T) {
 	service, err := browsergo.InitBrowser(true, "")
@@ -16,7 +16,7 @@ func TestShape(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	instance, err := service.NewService(context.Background(), 220000)
+	instance, err := service.NewService(context.Background(), 400000)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,10 +38,10 @@ func TestShape(t *testing.T) {
 	shapeSolver := &browsergo.SolveShape{
 		BrowserService: instance,
 		Context:        context.TODO(),
-		Deadline:       15,
-		ScriptUrl:      browsergo.Target,
-		UserAgent:      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36",
-		RequestUrl:     "https://gsp.target.com/gsp/authentications/v1/credential_validations?client_id=ecom-web-1.0.0",
+		Deadline:       45,
+		ScriptUrl:      browsergo.NewBalance,
+		UserAgent:      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+		RequestUrl:     "https://www.newbalance.com/on/demandware.static/Sites-NBUS-Site/en_US/CheckoutServices-PlaceOrder?termsconditions=undefined&DFReferenceId=",
 		RequestMethod:  "POST",
 		ProxyString:    proxy,
 	}

@@ -54,8 +54,6 @@ func (c *SolveShape) HandleShape() (map[string][]string, error) {
 				return headers, err
 			}
 
-			time.Sleep(500 * time.Millisecond)
-
 			if err := c.SetBody(shapeBody); err != nil {
 				return headers, err
 			}
