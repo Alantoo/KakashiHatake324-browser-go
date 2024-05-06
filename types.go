@@ -46,6 +46,7 @@ type BrowserOpts struct {
 	StartUrl     string
 	Proxy        string
 	Args         []FlagType
+	Profile      string
 	Headless     bool
 	OpenDevtools bool
 	WaitLoad     bool
