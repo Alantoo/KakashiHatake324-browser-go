@@ -100,6 +100,7 @@ func (s *BrowserService) createClient() {
 						json.Unmarshal(message, &socketMessage)
 
 						switch socketMessage["type"] {
+						case "count":
 						case "message":
 							if s.client.verbose {
 								log.Println("[SOCKET CLIENT] New Message:", string(message))
