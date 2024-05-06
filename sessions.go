@@ -1,4 +1,4 @@
-package browsergo
+package crigo
 
 import (
 	"fmt"
@@ -9,8 +9,9 @@ import (
 // create a session with a folder name
 func (s *ClientInit) CreateSession(name string) error {
 	name = strings.ToLower(name)
-	if _, err := os.Stat(fmt.Sprintf("%s/_profile-%s", s.sessions, name)); os.IsNotExist(err) {
-		if err := os.Mkdir(fmt.Sprintf("%s/_profile-%s", s.sessions, name), os.ModePerm); err != nil {
+	sessionPath := fixPath(fmt.Sprintf("%s%sprofile-%s", s.sessions, pathSeparator, name))
+	if _, err := os.Stat(sessionPath); os.IsNotExist(err) {
+		if err := os.Mkdir(sessionPath, os.ModePerm); err != nil {
 			return err
 		} else {
 			return nil
@@ -23,18 +24,20 @@ func (s *ClientInit) CreateSession(name string) error {
 // create a session with a folder name
 func (s *ClientInit) DeleteSession(name string) error {
 	name = strings.ToLower(name)
-	if err := os.RemoveAll(fmt.Sprintf("%s/_profile-%s", s.sessions, name)); os.IsNotExist(err) {
+	sessionPath := fixPath(fmt.Sprintf("%s%sprofile-%s", s.sessions, pathSeparator, name))
+	if err := os.RemoveAll(sessionPath); os.IsNotExist(err) {
 		return err
 	}
 	return nil
 }
 
 // get a session string to pass through the args settings
-func (s *ClientInit) GetSessionFlag(name string) (FlagType, error) {
+func (s *ClientInit) GetSessionName(name string) (string, error) {
 	name = strings.ToLower(name)
-	if _, err := os.Stat(fmt.Sprintf("%s/_profile-%s", s.sessions, name)); os.IsNotExist(err) {
-		return "", errSessionDoesntExists
+	sessionPath := fixPath(fmt.Sprintf("%s%sprofile-%s", s.sessions, pathSeparator, name))
+	if _, err := os.Stat(sessionPath); os.IsNotExist(err) {
+		return sessionPath, nil
 	} else {
-		return FlagType(fmt.Sprintf("--user-data-dir=%s/_profile-%s", s.sessions, name)), nil
+		return sessionPath, nil
 	}
 }
