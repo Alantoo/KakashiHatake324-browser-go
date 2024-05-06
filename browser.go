@@ -25,6 +25,7 @@ func (c *BrowserService) OpenBrowser(opts *BrowserOpts) error {
 		"service":  c.uuid,
 		"action":   "open",
 		"startUrl": opts.StartUrl,
+		"profile":  opts.Profile,
 		"args":     opts.Args,
 		"proxy":    opts.Proxy,
 		"headless": opts.Headless,
