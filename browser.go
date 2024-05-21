@@ -47,8 +47,9 @@ func (c *BrowserService) OpenBrowser(opts *BrowserOpts) error {
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
 	if err != nil {
-		c.client.increaseServices()
+		return err
 	}
+	c.client.increaseServices()
 	// return error
 	return err
 }
