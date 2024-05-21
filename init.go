@@ -93,3 +93,14 @@ func (c *ClientInit) CloseClient() error {
 	}
 	return nil
 }
+
+// wait for an element on the page
+func (c *ClientInit) Count() (int, error) {
+	// return error if connection is closed
+	if c == nil {
+		return 0, errServerConnection
+	}
+	count := c.countServices()
+	// return error
+	return count, nil
+}

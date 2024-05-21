@@ -9,15 +9,34 @@ import (
 
 // client information
 type ClientInit struct {
-	CTX        context.Context
-	cancel     context.CancelFunc
-	verbose    bool
-	closeExe   func() error
-	conn       *websocket.Conn
-	port       int
-	sessions   string
-	Services   []*BrowserService
-	clientSync sync.Mutex
+	CTX           context.Context
+	cancel        context.CancelFunc
+	verbose       bool
+	closeExe      func() error
+	conn          *websocket.Conn
+	port          int
+	sessions      string
+	Services      []*BrowserService
+	CountServices int
+	clientSync    sync.Mutex
+}
+
+func (c *ClientInit) decreaseServices() {
+	c.clientSync.Lock()
+	defer c.clientSync.Unlock()
+	c.CountServices--
+}
+
+func (c *ClientInit) increaseServices() {
+	c.clientSync.Lock()
+	defer c.clientSync.Unlock()
+	c.CountServices++
+}
+
+func (c *ClientInit) countServices() int {
+	c.clientSync.Lock()
+	defer c.clientSync.Unlock()
+	return c.CountServices
 }
 
 // browser service struct

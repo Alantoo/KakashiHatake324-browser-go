@@ -46,44 +46,9 @@ func (c *BrowserService) OpenBrowser(opts *BrowserOpts) error {
 
 	// listen for the response from the server
 	_, _, _, err = c.awaitMessage()
-
-	// return error
-	return err
-}
-
-// wait for an element on the page
-func (c *BrowserService) Count() error {
-	// return error if connection is closed
-	if c.conn == nil {
-		return errConnectionClosed
+	if err != nil {
+		c.client.increaseServices()
 	}
-
-	var err error
-	var message []byte
-	if c.client.verbose {
-		log.Println("[WFE] Counting...")
-	}
-
-	// build the message going to the server
-	if message, err = json.Marshal(map[string]interface{}{
-		"service": c.uuid,
-		"action":  "count",
-	}); err != nil {
-		return err
-	}
-	if c.client.verbose {
-		log.Println("[WFE] Sending message")
-	}
-	c.browserSync.Lock()
-	defer c.browserSync.Unlock()
-	// send the message to the server
-	if err = c.conn.WriteJSON(message); err != nil {
-		return err
-	}
-
-	// listen for the response from the server
-	_, _, _, err = c.awaitMessage()
-
 	// return error
 	return err
 }
