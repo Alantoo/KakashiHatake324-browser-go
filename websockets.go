@@ -55,7 +55,9 @@ func (s *ClientInit) createMainClient() {
 						}
 						socketMessage := make(map[string]interface{})
 						json.Unmarshal(message, &socketMessage)
-
+						if s.verbose {
+							log.Println("[MAIN SOCKET CLIENT]", string(message))
+						}
 						switch socketMessage["type"] {
 						case "decrease":
 							s.decreaseServices()
