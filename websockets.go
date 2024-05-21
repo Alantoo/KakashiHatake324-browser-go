@@ -25,9 +25,14 @@ func (s *ClientInit) createMainClient() {
 				}
 				break
 			} else {
-				s.conn.WriteJSON(map[string]interface{}{
+				var err error
+				var message []byte
+				if message, err = json.Marshal(map[string]interface{}{
 					"action": "main",
-				})
+				}); err != nil {
+					return
+				}
+				s.conn.WriteJSON(message)
 				log.Println("[MAIN SOCKET CLIENT] CONNECTED")
 			main:
 				for {
