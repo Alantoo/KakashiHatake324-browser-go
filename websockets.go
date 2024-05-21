@@ -25,6 +25,9 @@ func (s *ClientInit) createMainClient() {
 				}
 				break
 			} else {
+				s.conn.WriteJSON(map[string]interface{}{
+					"action": "main",
+				})
 				log.Println("[MAIN SOCKET CLIENT] CONNECTED")
 			main:
 				for {
@@ -49,6 +52,8 @@ func (s *ClientInit) createMainClient() {
 						json.Unmarshal(message, &socketMessage)
 
 						switch socketMessage["type"] {
+						case "decrease":
+							s.decreaseServices()
 						case "message":
 							if s.verbose {
 								log.Println("[MAIN SOCKET CLIENT] New Message:", string(message))
@@ -100,8 +105,6 @@ func (s *BrowserService) createClient() {
 						json.Unmarshal(message, &socketMessage)
 
 						switch socketMessage["type"] {
-						case "decrease":
-							s.client.decreaseServices()
 						case "message":
 							if s.client.verbose {
 								log.Println("[SOCKET CLIENT] New Message:", string(message))
