@@ -30,7 +30,7 @@ type SolveKasada struct {
 }
 
 // solve shape with a shape request
-func (c *SolveKasada) HandleKasada(mu ...sync.Mutex) error {
+func (c *SolveKasada) HandleKasada(mu *sync.Mutex) error {
 	var err error
 
 	if c.KpsdkST != 0 {
@@ -70,8 +70,8 @@ func (c *SolveKasada) HandleKasada(mu ...sync.Mutex) error {
 	if err := instance.OpenBrowser(browserOpts); err != nil {
 		return err
 	}
-	if len(mu) > 0 {
-		mu[0].Unlock()
+	if mu != nil {
+		mu.Unlock()
 	}
 	_, err = instance.RequestListener()
 	if err != nil {
