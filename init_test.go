@@ -11,7 +11,7 @@ import (
 
 func TestInit(t *testing.T) {
 	t.Skip()
-	service, err := browsergo.InitBrowser(true, "")
+	service, err := browsergo.InitBrowser("browser-go-test", true, "")
 	if err != nil {
 		log.Fatal(err)
 	}

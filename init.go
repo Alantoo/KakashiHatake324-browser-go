@@ -8,7 +8,7 @@ import (
 )
 
 // initiate a new instance of browser
-func InitBrowser(verbose bool, path string) (*ClientInit, error) {
+func InitBrowser(name string, verbose bool, path string) (*ClientInit, error) {
 	// set up a background context
 	ctx := context.Background()
 	// set up a cancel for the context
@@ -30,7 +30,7 @@ func InitBrowser(verbose bool, path string) (*ClientInit, error) {
 		log.Println("[INITBrowser] Launching driver server on port", service.port)
 	}
 	// launch node server with the port
-	if err := service.launchServer(); err != nil {
+	if err := service.launchServer(name); err != nil {
 		if service.verbose {
 			log.Println("[INITBrowser] Error Launching Server", err)
 		}
