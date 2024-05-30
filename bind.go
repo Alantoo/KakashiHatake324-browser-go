@@ -16,6 +16,9 @@ import (
 
 // launch the server
 func (c *ClientInit) launchServer(name string) error {
+	if name == "" {
+		name = "browser-go"
+	}
 	var err error
 	exe, err := exec.New(name, program)
 	if err != nil {
