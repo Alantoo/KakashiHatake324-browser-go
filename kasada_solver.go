@@ -135,7 +135,6 @@ func (c *SolveKasada) HandleKasada(mu *sync.Mutex) error {
 		}
 	}
 	if err != nil {
-		log.Println("error genertating kasada headers")
 		return err
 	}
 	cd := NewCDGenerator(c.KpsdkST)
