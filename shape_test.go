@@ -11,7 +11,7 @@ import (
 const shapeProxy = "31.128.120.186:63690:yvyyhlia:s4XI854jtl"
 
 func TestShape(t *testing.T) {
-	service, err := browsergo.InitBrowser("browser-go-test", true, "")
+	service, err := browsergo.InitBrowser("browser-go-test", true, true, "")
 	if err != nil {
 		log.Fatal(err)
 	}

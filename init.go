@@ -8,7 +8,7 @@ import (
 )
 
 // initiate a new instance of browser
-func InitBrowser(name string, verbose bool, path string) (*ClientInit, error) {
+func InitBrowser(name string, verbose, opera bool, path string) (*ClientInit, error) {
 	// set up a background context
 	ctx := context.Background()
 	// set up a cancel for the context
@@ -19,6 +19,7 @@ func InitBrowser(name string, verbose bool, path string) (*ClientInit, error) {
 		cancel:   cancel,
 		verbose:  verbose,
 		sessions: path,
+		UseOpera: opera,
 	}
 
 	if service.verbose {

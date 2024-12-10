@@ -10,6 +10,7 @@ import (
 // client information
 type ClientInit struct {
 	CTX           context.Context
+	UseOpera      bool
 	cancel        context.CancelFunc
 	verbose       bool
 	closeExe      func() error

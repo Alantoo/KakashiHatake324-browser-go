@@ -29,6 +29,7 @@ func (s *ClientInit) createMainClient() {
 				var message []byte
 				if message, err = json.Marshal(map[string]interface{}{
 					"action": "main",
+					"opera":  s.UseOpera,
 				}); err != nil {
 					return
 				}
