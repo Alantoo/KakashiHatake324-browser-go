@@ -4,6 +4,8 @@ package browsergo
 
 import (
 	_ "embed"
+	"log"
+	"runtime"
 	"strings"
 )
 
@@ -14,6 +16,8 @@ var pathSeparator = "/"
 
 // get the program depending on the arch
 func getProgram() []byte {
+	arch := runtime.GOARCH
+	log.Println("[INITBrowser] MacOs:", arch)
 	return program
 }
 

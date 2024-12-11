@@ -4,6 +4,7 @@ package browsergo
 
 import (
 	_ "embed"
+	"log"
 	"runtime"
 	"strings"
 )
@@ -19,6 +20,7 @@ var pathSeparator = "/"
 // get the program depending on the arch
 func getProgram() []byte {
 	arch := runtime.GOARCH
+	log.Println("[INITBrowser] Linux:", arch)
 	if arch == "arm64" {
 		return programArm
 	} else {
