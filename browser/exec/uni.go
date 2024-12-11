@@ -54,11 +54,7 @@ func tempDir() string {
 	os.TempDir()
 	dir := os.TempDir()
 	if dir == "" {
-		if runtime.GOOS == "android" {
-			dir = "/data/local/tmp"
-		} else {
-			dir = "/tmp"
-		}
+		dir = "/tmp"
 	}
 	return dir
 }
