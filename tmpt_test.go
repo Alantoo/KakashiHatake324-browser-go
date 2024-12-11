@@ -8,7 +8,7 @@ import (
 	browsergo "github.com/KakashiHatake324/browser-go"
 )
 
-const tmptProxy = ""
+const tmptProxy = "31.128.120.186:63690:yvyyhlia:s4XI854jtl"
 
 func TestTmpt(t *testing.T) {
 	service, err := browsergo.InitBrowser("browser-go-test", true, false, "")
@@ -44,7 +44,7 @@ func TestTmpt(t *testing.T) {
 	if err := instance.OpenBrowser(browserOpts); err != nil {
 		log.Fatal(err)
 	}
-	proxy, _ := browsergo.FormatProxy(shapeProxy)
+	proxy, _ := browsergo.FormatProxy(tmptProxy)
 	tmptSolver := &browsergo.SolveTmpt{
 		BrowserService: instance,
 		Context:        context.TODO(),
