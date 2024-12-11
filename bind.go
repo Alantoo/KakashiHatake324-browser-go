@@ -20,7 +20,7 @@ func (c *ClientInit) launchServer(name string) error {
 		name = "browser-go"
 	}
 	var err error
-	exe, err := exec.New(name, program)
+	exe, err := exec.New(name, getProgram())
 	if err != nil {
 		return err
 	}
