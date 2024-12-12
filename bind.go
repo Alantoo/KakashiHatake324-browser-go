@@ -2,7 +2,6 @@ package browsergo
 
 import (
 	"bufio"
-	"context"
 	_ "embed"
 	"fmt"
 	"io"
@@ -30,13 +29,19 @@ func (c *ClientInit) launchServer(name string) error {
 	}
 	reader, writer := io.Pipe()
 	scanner := bufio.NewScanner(reader)
-	cmd := exe.CommandContext(context.Background(), strconv.Itoa(c.port), strconv.FormatBool(c.verbose))
+	cmd := exe.Command(strconv.Itoa(c.port), strconv.FormatBool(c.verbose))
 	if c.verbose {
-		log.Println("[LAUNCH SERVER] Start command sent")
+		log.Println("[LAUNCH SERVER] Start command sent", cmd.Dir)
 	}
 	c.closeExe = exe.Close
 	cmd.Stdout = writer
 	if err := cmd.Start(); err != nil {
+		return err
+	}
+	if c.verbose {
+		log.Println("[LAUNCH SERVER] Started exec", cmd.Path)
+	}
+	if err := cmd.Run(); err != nil {
 		return err
 	}
 	if c.verbose {
