@@ -11,14 +11,15 @@ type SolveTmpt struct {
 	// seconds to stop the deadline
 	Context     context.Context
 	Cancel      func()
-	Deadline    int
+	Deadline    int64
 	Url         string
 	ProxyString string
 }
 
 // solve shape with a shape request
 func (c *SolveTmpt) HandleTmpt() (string, error) {
-	c.Context, c.Cancel = context.WithDeadline(context.TODO(), time.Now().Add(time.Duration(c.Deadline)*time.Second))
+	c.Context, c.Cancel = context.WithDeadline(c.BrowserService.CTX, time.Now().Add(time.Duration(c.Deadline)*time.Second))
+	timing := time.NewTimer(time.Duration(c.Deadline) * 60 * time.Second)
 	defer c.Cancel()
 	var err error
 	select {
@@ -28,10 +29,14 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 	case <-c.CTX.Done():
 		err = errors.New("main context was cancelled")
 		return "", err
+	case <-c.BrowserService.CTX.Done():
+		err = errors.New("main context was cancelled")
+		return "", err
 	default:
 		if err := c.Navigate(c.Url, false); err != nil {
 			return "", err
 		}
+		time.Sleep(250 * time.Millisecond)
 		var complete bool
 		for !complete {
 			select {
@@ -39,6 +44,12 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 				err = errors.New("deadline has exceeded so the context cancelled")
 				return "", err
 			case <-c.CTX.Done():
+				err = errors.New("main context was cancelled")
+				return "", err
+			case <-c.BrowserService.CTX.Done():
+				err = errors.New("main context was cancelled")
+				return "", err
+			case <-timing.C:
 				err = errors.New("main context was cancelled")
 				return "", err
 			default:
@@ -51,7 +62,7 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 						return c.Value, nil
 					}
 				}
-				time.Sleep(100 * time.Millisecond)
+				time.Sleep(1000 * time.Millisecond)
 			}
 		}
 	}
