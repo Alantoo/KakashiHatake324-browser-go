@@ -90,17 +90,14 @@ func (c *ClientInit) launchServer(name string) error {
 		}
 
 		// Prepare the command to run the binary
-		cmd := ex.Command(binaryPath)
-
-		// Optional: If the binary needs arguments, add them here
-		cmd.Args = []string{strconv.Itoa(c.port), strconv.FormatBool(c.verbose)}
+		cmd := ex.Command(binaryPath, strconv.Itoa(c.port), strconv.FormatBool(c.verbose))
 
 		// Set the command output to be visible in the Go program's output
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
 		// Run the command
-		err := cmd.Run()
+		err := cmd.Start()
 		if err != nil {
 			log.Fatalf("Failed to execute binary: %v\n", err)
 		}
