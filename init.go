@@ -57,6 +57,11 @@ func InitBrowser(name string, verbose, opera bool, path string) (*ClientInit, er
 		}
 		time.Sleep(1 * time.Second)
 	}
+
+	if service.verbose {
+		log.Println("[INITBrowser] Init complete and connection initiated successfully")
+	}
+
 	return service, err
 }
 
