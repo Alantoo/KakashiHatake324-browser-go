@@ -41,9 +41,6 @@ func (c *ClientInit) launchServer(name string) error {
 	if c.verbose {
 		log.Println("[LAUNCH SERVER] Started exec", cmd.Path)
 	}
-	if err := cmd.Run(); err != nil {
-		return err
-	}
 	if c.verbose {
 		log.Println("[LAUNCH SERVER] Waiting for server to load..")
 	}
@@ -70,6 +67,7 @@ func (c *ClientInit) launchServer(name string) error {
 		}
 	}()
 
+	checks := 0
 	for !loaded {
 		pids, err := getRunningPIDs()
 		if err != nil {
@@ -80,9 +78,13 @@ func (c *ClientInit) launchServer(name string) error {
 		case <-c.CTX.Done():
 			return nil
 		default:
+			if checks >= 5 {
+				return nil
+			}
 			if c.verbose {
 				log.Println("Running PIDS", strings.Join(pids, ":"))
 			}
+			checks++
 			time.Sleep(1 * time.Second)
 		}
 	}
