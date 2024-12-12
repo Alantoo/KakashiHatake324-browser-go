@@ -102,9 +102,13 @@ func (c *ClientInit) launchServer(name string) error {
 			log.Fatalf("Failed to execute binary: %v\n", err)
 		}
 
-		// If the binary ran successfully
-		fmt.Println("Binary executed successfully!")
-
+		if c.verbose {
+			log.Println("[LAUNCH SERVER] Started exec", cmd.Path)
+		}
+		if c.verbose {
+			log.Println("[LAUNCH SERVER] Waiting for server to load..")
+		}
+		time.Sleep(10 * time.Second)
 		return nil
 	}
 }
