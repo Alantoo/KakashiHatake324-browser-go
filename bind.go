@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -65,12 +66,39 @@ func (c *ClientInit) launchServer(name string) error {
 	}()
 
 	for !loaded {
+		pids, err := getRunningPIDs()
+		if err != nil {
+			log.Fatalf("Failed to get running PIDs: %v", err)
+		}
+
 		select {
 		case <-c.CTX.Done():
 			return nil
 		default:
+			if c.verbose {
+				log.Println("Running PIDS", strings.Join(pids, ":"))
+			}
 			time.Sleep(1 * time.Second)
 		}
 	}
 	return err
+}
+
+func getRunningPIDs() ([]string, error) {
+	var pids []string
+
+	// Read the /proc directory
+	files, err := os.ReadDir("/proc")
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range files {
+		// Check if the directory name is numeric (indicating a PID)
+		if file.IsDir() {
+			pids = append(pids, file.Name())
+		}
+	}
+
+	return pids, nil
 }
