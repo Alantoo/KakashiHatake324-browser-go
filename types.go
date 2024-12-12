@@ -69,6 +69,7 @@ type BrowserOpts struct {
 	Profile      string
 	Headless     bool
 	OpenDevtools bool
+	ForceChrome  bool
 	WaitLoad     bool
 }
 

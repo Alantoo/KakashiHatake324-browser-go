@@ -22,15 +22,16 @@ func (c *BrowserService) OpenBrowser(opts *BrowserOpts) error {
 
 	// build the message going to the server
 	if message, err = json.Marshal(map[string]interface{}{
-		"service":  c.uuid,
-		"action":   "open",
-		"startUrl": opts.StartUrl,
-		"profile":  opts.Profile,
-		"args":     opts.Args,
-		"proxy":    opts.Proxy,
-		"headless": opts.Headless,
-		"devtools": opts.OpenDevtools,
-		"timeout":  c.timeout,
+		"service":     c.uuid,
+		"action":      "open",
+		"startUrl":    opts.StartUrl,
+		"profile":     opts.Profile,
+		"args":        opts.Args,
+		"proxy":       opts.Proxy,
+		"headless":    opts.Headless,
+		"devtools":    opts.OpenDevtools,
+		"forceChrome": opts.ForceChrome,
+		"timeout":     c.timeout,
 	}); err != nil {
 		return err
 	}
