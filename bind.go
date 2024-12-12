@@ -24,15 +24,23 @@ func (c *ClientInit) launchServer(name string) error {
 	if err != nil {
 		return err
 	}
+	if c.verbose {
+		log.Println("[LAUNCH SERVER] Executable generated")
+	}
 	reader, writer := io.Pipe()
 	scanner := bufio.NewScanner(reader)
 	cmd := exe.CommandContext(context.Background(), strconv.Itoa(c.port), strconv.FormatBool(c.verbose))
+	if c.verbose {
+		log.Println("[LAUNCH SERVER] Start command sent")
+	}
 	c.closeExe = exe.Close
 	cmd.Stdout = writer
 	if err := cmd.Start(); err != nil {
 		return err
 	}
-
+	if c.verbose {
+		log.Println("[LAUNCH SERVER] Waiting for server to load..")
+	}
 	var loaded bool
 	go func() {
 		for scanner.Scan() {
