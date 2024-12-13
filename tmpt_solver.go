@@ -28,8 +28,16 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 	browserOpts := &BrowserOpts{
 		Proxy: c.ProxyString,
 		Args: []FlagType{
-			RandomWindowSize(),
+			DisableAutomations,
+			EnableLowEndMode,
+			ForceDeviceScaleFactor1,
+			DisableInProcessStackTraces,
+			NoSandbox,
+			DisableTranslate,
 			NoFirstRun,
+			NoDefaultBrowserCheck,
+			RandomWindowSize(),
+			DisableFeatures([]string{"LayoutNG", "PreloadMediaEngagementData", "MediaEngagementBypassAutoplayPolicies"}),
 		},
 		Headless:     true,
 		OpenDevtools: false,
