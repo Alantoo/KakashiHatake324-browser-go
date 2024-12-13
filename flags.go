@@ -6,6 +6,7 @@ import (
 )
 
 const (
+	Incognito                                     FlagType = "--incognito"
 	DisableExtentions                             FlagType = "--disable-extensions"
 	SingleProcess                                 FlagType = "--single-process"
 	DisableWebResources                           FlagType = "--disable-web-resources"

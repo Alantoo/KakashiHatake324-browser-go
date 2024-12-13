@@ -28,6 +28,7 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 	browserOpts := &BrowserOpts{
 		Proxy: c.ProxyString,
 		Args: []FlagType{
+			Incognito,
 			DisableAutomations,
 			EnableLowEndMode,
 			ForceDeviceScaleFactor1,
