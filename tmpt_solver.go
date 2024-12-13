@@ -66,11 +66,13 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 		err = errors.New("main context was cancelled")
 		return "", err
 	default:
+		if err := c.ClearCookies(); err != nil {
+			return "", err
+		}
+		time.Sleep(100 * time.Millisecond)
 		if err := c.Navigate(c.Url, false); err != nil {
 			return "", err
 		}
-
-		time.Sleep(100 * time.Millisecond)
 		var complete bool
 		for !complete {
 			select {
