@@ -29,6 +29,7 @@ func TestShape(t *testing.T) {
 		//Headless:     true,
 		OpenDevtools: false,
 		WaitLoad:     false,
+		ForceChrome:  true,
 	}
 
 	if err := instance.OpenBrowser(browserOpts); err != nil {

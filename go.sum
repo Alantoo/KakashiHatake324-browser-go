@@ -1,5 +1,7 @@
 github.com/KakashiHatake324/imap-go-prebuilt v0.0.0-20230810203918-3fbcba6dcc9f h1:qTEGjiLEFf/z3vDCsGuTIsDesfjGna04vycj/klVBT0=
 github.com/KakashiHatake324/imap-go-prebuilt v0.0.0-20230810203918-3fbcba6dcc9f/go.mod h1:QFgYLm2Rd+FpzAraSnAbmDc8GUXM/m3NCXS9Ywgx/n8=
+github.com/KakashiHatake324/mockjs v0.0.0-20241108195848-d3f53c51db6c h1:L0FZP33X0RY0yJyusePFnB2DsyC45zPYqBkDQOVBWvw=
+github.com/KakashiHatake324/mockjs v0.0.0-20241108195848-d3f53c51db6c/go.mod h1:AJiUkM5nOj0E/uZ+MYalpXoCvguQhVGtXp8GExQE2tg=
 github.com/PuerkitoBio/goquery v1.8.1 h1:uQxhNlArOIdbrH1tr0UXwdVFgDcZDrZVdcpygAcwmWM=
 github.com/PuerkitoBio/goquery v1.8.1/go.mod h1:Q8ICL1kNUJ2sXGoAhPGUdYDJvgQgHzJsnnd3H7Ho5jQ=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=

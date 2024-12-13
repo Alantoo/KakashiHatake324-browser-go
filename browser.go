@@ -32,6 +32,7 @@ func (c *BrowserService) OpenBrowser(opts *BrowserOpts) error {
 		"devtools":    opts.OpenDevtools,
 		"forceChrome": opts.ForceChrome,
 		"timeout":     c.timeout,
+		"tmpt":        opts.tmpt,
 	}); err != nil {
 		return err
 	}

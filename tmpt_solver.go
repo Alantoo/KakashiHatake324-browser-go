@@ -8,17 +8,60 @@ import (
 
 type SolveTmpt struct {
 	*BrowserService
-	// seconds to stop the deadline
-	Context     context.Context
-	Cancel      func()
-	Deadline    int64
-	Url         string
+	/****** The main context */
+	Context context.Context
+	/****** The cancel function */
+	Cancel func()
+	/****** Deadline in seconds for the job */
+	Deadline int64
+	/****** The url the tmpt comes from */
+	Url string
+	/****** The proxy string in ip:port:user:pass format */
 	ProxyString string
+	/****** MacOs devices are defaulted to opera but we can force chrome */
+	ForceChrome bool
 }
 
 // solve shape with a shape request
 func (c *SolveTmpt) HandleTmpt() (string, error) {
-	c.Context, c.Cancel = context.WithDeadline(c.BrowserService.CTX, time.Now().Add(time.Duration(c.Deadline)*time.Second))
+
+	browserOpts := &BrowserOpts{
+		Proxy: c.ProxyString,
+		Args: []FlagType{
+			DisableAutomations,
+			EnableLowEndMode,
+			ForceDeviceScaleFactor1,
+			DisableInProcessStackTraces,
+			DisableBackgroundMode,
+			DisableBackgroundNetworking,
+			DisableBackgroundOccludedWindows,
+			DisableComponentExtensionsWithBackgroundPages,
+			NoSandbox,
+			DisableTranslate,
+			DisableExtentions,
+			NoFirstRun,
+			NoDefaultBrowserCheck,
+			DisableSync,
+			DisablePreConnect,
+			DisableSmoothScrolling,
+			DisableInfoBars,
+			DisableLogging,
+			DisableWebResources,
+			RandomWindowSize(),
+			DisableFeatures([]string{"LayoutNG", "PreloadMediaEngagementData", "MediaEngagementBypassAutoplayPolicies"}),
+		},
+		Headless:     true,
+		OpenDevtools: false,
+		WaitLoad:     false,
+		ForceChrome:  c.ForceChrome,
+		tmpt:         true,
+	}
+
+	if err := c.OpenBrowser(browserOpts); err != nil {
+		return "", err
+	}
+
+	c.Context, c.Cancel = context.WithDeadline(c.CTX, time.Now().Add(time.Duration(c.Deadline)*time.Second))
 	timing := time.NewTimer(time.Duration(c.Deadline) * 60 * time.Second)
 	defer c.Cancel()
 	var err error
@@ -36,7 +79,7 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 		if err := c.Navigate(c.Url, false); err != nil {
 			return "", err
 		}
-		time.Sleep(250 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 		var complete bool
 		for !complete {
 			select {
@@ -62,7 +105,7 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 						return c.Value, nil
 					}
 				}
-				time.Sleep(1000 * time.Millisecond)
+				time.Sleep(500 * time.Millisecond)
 			}
 		}
 	}

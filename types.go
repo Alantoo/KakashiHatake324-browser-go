@@ -71,6 +71,7 @@ type BrowserOpts struct {
 	OpenDevtools bool
 	ForceChrome  bool
 	WaitLoad     bool
+	tmpt         bool
 }
 
 // type for frames

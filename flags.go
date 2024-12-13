@@ -6,6 +6,16 @@ import (
 )
 
 const (
+	DisableExtentions                             FlagType = "--disable-extensions"
+	SingleProcess                                 FlagType = "--single-process"
+	DisableWebResources                           FlagType = "--disable-web-resources"
+	DisableAutomations                            FlagType = "--disable-animations"
+	ForceDeviceScaleFactor1                       FlagType = "--force-device-scale-factor=1"
+	EnableLowEndMode                              FlagType = "--enable-low-end-device-mode"
+	DisableLogging                                FlagType = "--disable-logging"
+	DisableInfoBars                               FlagType = "--disable-infobars"
+	DisableSmoothScrolling                        FlagType = "--disable-smooth-scrolling"
+	DisablePreConnect                             FlagType = "--disable-preconnect"
 	DisableGPU                                    FlagType = "--disable-gpu"
 	PurgeMemoryButton                             FlagType = "--purge-memory-button"
 	DisableTranslate                              FlagType = "--disable-translate"

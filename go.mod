@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/KakashiHatake324/mockjs v0.0.0-20241108195848-d3f53c51db6c // indirect
 	github.com/PuerkitoBio/goquery v1.8.1 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/emersion/go-imap v1.2.1 // indirect
