@@ -26,7 +26,8 @@ type SolveTmpt struct {
 func (c *SolveTmpt) HandleTmpt() (string, error) {
 
 	browserOpts := &BrowserOpts{
-		Proxy: c.ProxyString,
+		Proxy:   c.ProxyString,
+		Profile: "profile-shape_gen",
 		Args: []FlagType{
 			Incognito,
 			DisableAutomations,
@@ -44,13 +45,12 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 		OpenDevtools: false,
 		WaitLoad:     false,
 		ForceChrome:  c.ForceChrome,
-		tmpt:         true,
+		tmpt:         false,
 	}
 
 	if err := c.OpenBrowser(browserOpts); err != nil {
 		return "", err
 	}
-
 	c.Context, c.Cancel = context.WithDeadline(c.CTX, time.Now().Add(time.Duration(c.Deadline)*time.Second))
 	timing := time.NewTimer(time.Duration(c.Deadline) * 60 * time.Second)
 	defer c.Cancel()
@@ -69,6 +69,7 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 		if err := c.Navigate(c.Url, false); err != nil {
 			return "", err
 		}
+
 		time.Sleep(100 * time.Millisecond)
 		var complete bool
 		for !complete {

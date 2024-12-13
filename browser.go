@@ -94,6 +94,43 @@ func (c *BrowserService) SetCookies(cookies []*BrowserGoCookies) error {
 	return err
 }
 
+// set new browser cookies
+func (c *BrowserService) ClearCookies() error {
+	// return error if connection is closed
+	if c.conn == nil {
+		return errConnectionClosed
+	}
+
+	var err error
+	var message []byte
+	if c.client.verbose {
+		log.Println("[CLEARING COOKIES] Initiating...")
+	}
+
+	// build the message going to the server
+	if message, err = json.Marshal(map[string]interface{}{
+		"service": c.uuid,
+		"action":  "clear-cookies",
+	}); err != nil {
+		return err
+	}
+	if c.client.verbose {
+		log.Println("[CLEARING COOKIES] Sending message")
+	}
+	c.browserSync.Lock()
+	defer c.browserSync.Unlock()
+	// send the message to the server
+	if err = c.conn.WriteJSON(message); err != nil {
+		return err
+	}
+
+	// listen for the response from the server
+	_, _, _, err = c.awaitMessage()
+
+	// return error
+	return err
+}
+
 // navigate to a url and decide to wait or not
 func (c *BrowserService) Navigate(url string, wait bool) error {
 	// return error if connection is closed
