@@ -26,7 +26,7 @@ func TestTmpt(t *testing.T) {
 		BrowserService: instance,
 		Context:        context.TODO(),
 		Deadline:       13,
-		Url:            "https://identity.ticketmaster.com/sign-in?integratorId=prd1741.iccp&placementId=mytmlogin&redirectUri=https://www.ticketmaster.com/",
+		Url:            "https://identity.ticketmaster.com/sign-in?integratorId=prd1741.iccp&placementId=mytmlogin&redirectUri=https://www.ticketmaster.com",
 		ProxyString:    proxy,
 		ForceChrome:    true,
 	}
