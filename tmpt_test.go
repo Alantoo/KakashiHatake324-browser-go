@@ -11,7 +11,7 @@ import (
 const tmptProxy = "31.128.120.186:63690:yvyyhlia:s4XI854jtl"
 
 func TestTmpt(t *testing.T) {
-	service, err := browsergo.InitBrowser("browser-go-test", true, false, "./")
+	service, err := browsergo.InitBrowser("browser-go-test", true, false, "")
 	if err != nil {
 		log.Fatal(err)
 	}

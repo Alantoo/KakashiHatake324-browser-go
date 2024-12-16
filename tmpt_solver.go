@@ -24,15 +24,10 @@ type SolveTmpt struct {
 
 // solve shape with a shape request
 func (c *SolveTmpt) HandleTmpt() (string, error) {
-
-	ses, err := c.client.GetSessionName("shape_gen")
-	if err != nil {
-		return "", err
-	}
-
+	var err error
 	browserOpts := &BrowserOpts{
 		Proxy:   c.ProxyString,
-		Profile: ses,
+		Profile: "shape_gen",
 		Args: []FlagType{
 			Incognito,
 			DisableAutomations,

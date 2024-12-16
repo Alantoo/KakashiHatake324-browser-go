@@ -7,3 +7,4 @@ target_test.go
 snipes_test.go
 *sessions_store*
 /shape
+/shape_gen
