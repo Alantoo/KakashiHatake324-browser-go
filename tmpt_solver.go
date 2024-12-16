@@ -25,9 +25,14 @@ type SolveTmpt struct {
 // solve shape with a shape request
 func (c *SolveTmpt) HandleTmpt() (string, error) {
 
+	ses, err := c.client.GetSessionName("shape_gen")
+	if err != nil {
+		return "", err
+	}
+
 	browserOpts := &BrowserOpts{
 		Proxy:   c.ProxyString,
-		Profile: "profile-shape_gen",
+		Profile: ses,
 		Args: []FlagType{
 			Incognito,
 			DisableAutomations,
@@ -54,7 +59,6 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 	c.Context, c.Cancel = context.WithDeadline(c.CTX, time.Now().Add(time.Duration(c.Deadline)*time.Second))
 	timing := time.NewTimer(time.Duration(c.Deadline) * 60 * time.Second)
 	defer c.Cancel()
-	var err error
 	select {
 	case <-c.Context.Done():
 		err = errors.New("deadline has exceeded so the context cancelled")
@@ -66,9 +70,11 @@ func (c *SolveTmpt) HandleTmpt() (string, error) {
 		err = errors.New("main context was cancelled")
 		return "", err
 	default:
+
 		if err := c.ClearCookies(); err != nil {
 			return "", err
 		}
+
 		time.Sleep(100 * time.Millisecond)
 		if err := c.Navigate(c.Url, false); err != nil {
 			return "", err

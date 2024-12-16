@@ -36,7 +36,7 @@ func (s *ClientInit) GetSessionName(name string) (string, error) {
 	name = strings.ToLower(name)
 	sessionPath := fixPath(fmt.Sprintf("%s%sprofile-%s", s.sessions, pathSeparator, name))
 	if _, err := os.Stat(sessionPath); os.IsNotExist(err) {
-		return sessionPath, nil
+		return sessionPath, s.CreateSession(name)
 	} else {
 		return sessionPath, nil
 	}
