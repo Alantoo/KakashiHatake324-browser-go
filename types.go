@@ -111,7 +111,7 @@ type BrowserCookiesApi struct {
 // response from js evaluations
 type EvaluationResponse struct {
 	Value       string `json:"value"`
-	Description string `json:"desbrowserption"`
+	Description string `json:"description"`
 	Type        string `json:"type"`
 }
 

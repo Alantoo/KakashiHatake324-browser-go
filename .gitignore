@@ -8,3 +8,5 @@ snipes_test.go
 *sessions_store*
 /shape
 /shape_gen
+.idea/
+.DS_Store

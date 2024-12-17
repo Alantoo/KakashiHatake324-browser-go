@@ -48,10 +48,10 @@ listen:
 									messageInterface.Type = info["message"].(map[string]interface{})["type"].(string)
 								}
 							}
-							if info["message"].(map[string]interface{})["desbrowserption"] != nil {
-								switch info["message"].(map[string]interface{})["desbrowserption"].(type) {
+							if info["message"].(map[string]interface{})["description"] != nil {
+								switch info["message"].(map[string]interface{})["description"].(type) {
 								case string:
-									messageInterface.Description = info["message"].(map[string]interface{})["desbrowserption"].(string)
+									messageInterface.Description = info["message"].(map[string]interface{})["description"].(string)
 									if strings.Contains(messageInterface.Description, "SyntaxError") {
 										err = errors.New(messageInterface.Description)
 									}
@@ -107,7 +107,9 @@ listen:
 						default:
 							if info["message"].(map[string]interface{})["value"] != nil {
 								if info["message"].(map[string]interface{})["value"].(string) != "" {
-									err = json.Unmarshal([]byte(info["message"].(map[string]interface{})["value"].(string)), &response)
+									err = json.Unmarshal(
+										[]byte(info["message"].(map[string]interface{})["value"].(string)), &response,
+									)
 									if err != nil {
 										break
 									}
@@ -119,11 +121,11 @@ listen:
 									response.Body = decodedString
 								}
 							}
-							if info["message"].(map[string]interface{})["desbrowserption"] != nil {
-								switch info["message"].(map[string]interface{})["desbrowserption"].(type) {
+							if info["message"].(map[string]interface{})["description"] != nil {
+								switch info["message"].(map[string]interface{})["description"].(type) {
 								case string:
-									if info["message"].(map[string]interface{})["desbrowserption"].(string) != "" {
-										err = errors.New(info["message"].(map[string]interface{})["desbrowserption"].(string))
+									if info["message"].(map[string]interface{})["description"].(string) != "" {
+										err = errors.New(info["message"].(map[string]interface{})["description"].(string))
 									}
 								}
 							}

@@ -94,10 +94,10 @@ Waiting for an element
 	}
 ```
 
-Evaluate javasbrowserpt and get the results
+Evaluate javascript and get the results
 
 ```go
-    // evaluate js and use the returned information [value, desbrowserption, type]
+    // evaluate js and use the returned information [value, description, type]
 	username, err := instance.Evaluate("document.querySelector('[data-var=\"userName\"]')?.innerHTML")
 	if err != nil {
 		log.Fatal(err)
